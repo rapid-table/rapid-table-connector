@@ -7,12 +7,12 @@ RapidTableConnector provides an SDK that allows easy CRUD operations using the R
 <dependency>
     <groupId>com.rapid-table.sdk</groupId>
     <artifactId>rtc4j</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
 </dependency>
 ```
 ### Gradle
 ```
-implementation 'com.rapid-table.sdk:rtc4j:0.0.2'
+implementation 'com.rapid-table.sdk:rtc4j:0.0.3'
 ```
 
 ---

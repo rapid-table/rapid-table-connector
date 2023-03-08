@@ -61,7 +61,7 @@ public class RapidTableConnector {
     }
 
     public <T> List<T> search(final IRequest request, final Class<T> classType) throws Exception {
-        if (!permission().isPermitted()) {
+        if (!credentials.isPermitted()) {
             this.credentials = permission();
         }
 
@@ -92,7 +92,7 @@ public class RapidTableConnector {
     }
 
     public long count(final IRequest request) throws Exception {
-        if (!permission().isPermitted()) {
+        if (!credentials.isPermitted()) {
             this.credentials = permission();
         }
 
@@ -119,7 +119,7 @@ public class RapidTableConnector {
     }
 
     public <T> T get(final IRequest request, final Class<T> classType) throws Exception {
-        if (!permission().isPermitted()) {
+        if (!credentials.isPermitted()) {
             this.credentials = permission();
         }
 
@@ -143,7 +143,7 @@ public class RapidTableConnector {
     }
 
     public InputStream getObject(final IRequest request) throws Exception {
-        if (!permission().isPermitted()) {
+        if (!credentials.isPermitted()) {
             this.credentials = permission();
         }
 
@@ -167,7 +167,7 @@ public class RapidTableConnector {
     }
 
     public String putObject(final IPutObjectRequest request) throws Exception {
-        if (!permission().isPermitted()) {
+        if (!credentials.isPermitted()) {
             this.credentials = permission();
         }
 
@@ -197,7 +197,7 @@ public class RapidTableConnector {
     }
 
     public String generateId(final IGenerateIdRequest request) throws Exception {
-        if (!permission().isPermitted()) {
+        if (!credentials.isPermitted()) {
             this.credentials = permission();
         }
 
@@ -221,7 +221,7 @@ public class RapidTableConnector {
     }
 
     public <T> List<T> create(final IRequest request, final Class<T> classType) throws Exception {
-        if (!permission().isPermitted()) {
+        if (!credentials.isPermitted()) {
             this.credentials = permission();
         }
 
@@ -248,7 +248,7 @@ public class RapidTableConnector {
     }
 
     public <T> List<T> update(final IRequest request, final Class<T> classType) throws Exception {
-        if (!permission().isPermitted()) {
+        if (!credentials.isPermitted()) {
             this.credentials = permission();
         }
 
@@ -275,7 +275,7 @@ public class RapidTableConnector {
     }
 
     public void delete(final IDeleteRequest request) throws Exception {
-        if (!permission().isPermitted()) {
+        if (!credentials.isPermitted()) {
             this.credentials = permission();
         }
 
@@ -375,7 +375,7 @@ public class RapidTableConnector {
                 return false;
             }
             final var diff = MINUTES.between(LocalDateTime.now(), approvedAt);
-            return Math.abs(diff) > 50;
+            return Math.abs(diff) <= 50;
         }
 
         static Credentials empty() {
