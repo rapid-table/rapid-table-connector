@@ -1,9 +1,19 @@
 # rapid-table-connector
-RapidTableConnector provides an SDK that allows easy CRUD operations using the Rest API provided by RapidTable.
+RapidTableConnector provides an SDK that allows easy CRUD operations using the Rest API provided by [RapidTable](https://rapid-table.com/).
 
 ## Getting started
 ### Maven
+```xml
+<dependency>
+    <groupId>com.rapid-table.sdk</groupId>
+    <artifactId>rtc4j</artifactId>
+    <version>0.0.1</version>
+</dependency>
+```
 ### Gradle
+```
+implementation 'com.rapid-table.sdk:rtc4j:0.0.1'
+```
 
 ---
 
