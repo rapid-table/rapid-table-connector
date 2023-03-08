@@ -28,9 +28,11 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+
+import static java.time.temporal.ChronoUnit.MINUTES;
 
 public class RapidTableConnector {
     private static final ObjectMapper mapper = new ObjectMapper()
@@ -47,7 +49,7 @@ public class RapidTableConnector {
     private final String AUTHORIZATION = "Authorization";
     private final String HTTP_CONTENT_TYPE_HEADER = "Content-Type";
     private final String HTTP_CONTENT_TYPE_JSON_VALUE = "application/json; charset=utf-8";
-    private String token = null;
+    private Credentials credentials = Credentials.empty();
 
     public RapidTableConnector(final String accessId, final String accessKey,
                                final String host, final Boolean secure) {
@@ -59,9 +61,8 @@ public class RapidTableConnector {
     }
 
     public <T> List<T> search(final IRequest request, final Class<T> classType) throws Exception {
-        if (Objects.isNull(token)) {
-            this.token = permission()
-                .orElseThrow(Exception::new);
+        if (!permission().isPermitted()) {
+            this.credentials = permission();
         }
 
         if (Objects.isNull(request.getPath())) {
@@ -72,7 +73,7 @@ public class RapidTableConnector {
             .GET()
             .uri(new URI(schema, host, request.getPath(), request.getQuery(), null))
             .setHeader(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON_VALUE)
-            .setHeader(AUTHORIZATION, token);
+            .setHeader(AUTHORIZATION, credentials.token());
 
         final var httpRequest = httpRequestBuilder
             .build();
@@ -91,9 +92,8 @@ public class RapidTableConnector {
     }
 
     public long count(final IRequest request) throws Exception {
-        if (Objects.isNull(token)) {
-            this.token = permission()
-                .orElseThrow(Exception::new);
+        if (!permission().isPermitted()) {
+            this.credentials = permission();
         }
 
         if (Objects.isNull(request.getPath())) {
@@ -104,7 +104,7 @@ public class RapidTableConnector {
             .GET()
             .uri(new URI(schema, host, request.getPath(), request.getQuery(), null))
             .setHeader(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON_VALUE)
-            .setHeader(AUTHORIZATION, token);
+            .setHeader(AUTHORIZATION, credentials.token());
 
         final var httpRequest = httpRequestBuilder
             .build();
@@ -119,9 +119,8 @@ public class RapidTableConnector {
     }
 
     public <T> T get(final IRequest request, final Class<T> classType) throws Exception {
-        if (Objects.isNull(token)) {
-            this.token = permission()
-                .orElseThrow(Exception::new);
+        if (!permission().isPermitted()) {
+            this.credentials = permission();
         }
 
         if (Objects.isNull(request.getPath())) {
@@ -132,7 +131,7 @@ public class RapidTableConnector {
             .GET()
             .uri(new URI(schema, host, request.getPath(), request.getQuery(), null))
             .setHeader(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON_VALUE)
-            .setHeader(AUTHORIZATION, token)
+            .setHeader(AUTHORIZATION, credentials.token())
             .build();
 
         final var response = client
@@ -144,9 +143,8 @@ public class RapidTableConnector {
     }
 
     public InputStream getObject(final IRequest request) throws Exception {
-        if (Objects.isNull(token)) {
-            this.token = permission()
-                .orElseThrow(Exception::new);
+        if (!permission().isPermitted()) {
+            this.credentials = permission();
         }
 
         if (Objects.isNull(request.getPath())) {
@@ -157,7 +155,7 @@ public class RapidTableConnector {
             .GET()
             .uri(new URI(schema, host, request.getPath(), request.getQuery(), null))
             .setHeader(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON_VALUE)
-            .setHeader(AUTHORIZATION, token)
+            .setHeader(AUTHORIZATION, credentials.token())
             .build();
 
         final var response = client
@@ -169,9 +167,8 @@ public class RapidTableConnector {
     }
 
     public String putObject(final IPutObjectRequest request) throws Exception {
-        if (Objects.isNull(token)) {
-            this.token = permission()
-                .orElseThrow(Exception::new);
+        if (!permission().isPermitted()) {
+            this.credentials = permission();
         }
 
         if (Objects.isNull(request.getPath())) {
@@ -182,7 +179,7 @@ public class RapidTableConnector {
             final var httpRequest = HttpRequest.newBuilder()
                 .uri(new URI(schema, host, request.getPath(), null, null))
                 .PUT(request.getPublisher())
-                .setHeader(AUTHORIZATION, token)
+                .setHeader(AUTHORIZATION, credentials.token())
                 .setHeader(HTTP_CONTENT_TYPE_HEADER, request.getContentType())
                 .build();
 
@@ -200,9 +197,8 @@ public class RapidTableConnector {
     }
 
     public String generateId(final IGenerateIdRequest request) throws Exception {
-        if (Objects.isNull(token)) {
-            this.token = permission()
-                .orElseThrow(Exception::new);
+        if (!permission().isPermitted()) {
+            this.credentials = permission();
         }
 
         if (Objects.isNull(request.getPath())) {
@@ -213,7 +209,7 @@ public class RapidTableConnector {
             .GET()
             .uri(new URI(schema, host, request.getPath(), null, null))
             .setHeader(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON_VALUE)
-            .setHeader(AUTHORIZATION, token)
+            .setHeader(AUTHORIZATION, credentials.token())
             .build();
 
         final var response = client
@@ -225,9 +221,8 @@ public class RapidTableConnector {
     }
 
     public <T> List<T> create(final IRequest request, final Class<T> classType) throws Exception {
-        if (Objects.isNull(token)) {
-            this.token = permission()
-                .orElseThrow(Exception::new);
+        if (!permission().isPermitted()) {
+            this.credentials = permission();
         }
 
         if (Objects.isNull(request.getPath())) {
@@ -238,7 +233,7 @@ public class RapidTableConnector {
             .POST(HttpRequest.BodyPublishers.ofString(request.getBody()))
             .uri(new URI(schema, host, request.getPath(), request.getQuery(), null))
             .setHeader(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON_VALUE)
-            .setHeader(AUTHORIZATION, token)
+            .setHeader(AUTHORIZATION, credentials.token())
             .build();
 
         final var response = client
@@ -253,9 +248,8 @@ public class RapidTableConnector {
     }
 
     public <T> List<T> update(final IRequest request, final Class<T> classType) throws Exception {
-        if (Objects.isNull(token)) {
-            this.token = permission()
-                .orElseThrow(Exception::new);
+        if (!permission().isPermitted()) {
+            this.credentials = permission();
         }
 
         if (Objects.isNull(request.getPath())) {
@@ -266,7 +260,7 @@ public class RapidTableConnector {
             .PUT(HttpRequest.BodyPublishers.ofString(request.getBody()))
             .uri(new URI(schema, host, request.getPath(), request.getQuery(), null))
             .setHeader(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON_VALUE)
-            .setHeader(AUTHORIZATION, token)
+            .setHeader(AUTHORIZATION, credentials.token())
             .build();
 
         final var response = client
@@ -281,9 +275,8 @@ public class RapidTableConnector {
     }
 
     public void delete(final IDeleteRequest request) throws Exception {
-        if (Objects.isNull(token)) {
-            this.token = permission()
-                .orElseThrow(Exception::new);
+        if (!permission().isPermitted()) {
+            this.credentials = permission();
         }
 
         if (Objects.isNull(request.getPath())) {
@@ -294,7 +287,7 @@ public class RapidTableConnector {
             .DELETE()
             .uri(new URI(schema, host, request.getPath(), request.getQuery(), null))
             .setHeader(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON_VALUE)
-            .setHeader(AUTHORIZATION, token)
+            .setHeader(AUTHORIZATION, credentials.token())
             .build();
 
         final var response = client
@@ -304,7 +297,7 @@ public class RapidTableConnector {
         }
     }
 
-    private Optional<String> permission() throws Exception {
+    private Credentials permission() throws Exception {
         final var body = String.format("{\"email\": \"%s\", \"key\": \"%s\"}", accessId, accessKey);
         final var httpRequest = HttpRequest.newBuilder()
             .uri(new URI(schema, host, PathConfig.ROOT + PathConfig.PERMISSIONS, null, null))
@@ -317,8 +310,10 @@ public class RapidTableConnector {
         if (response.statusCode() != 200) {
             throw new Exception();
         }
-        return response.headers()
-            .firstValue(AUTHORIZATION);
+        final var token = response.headers()
+            .firstValue(AUTHORIZATION)
+            .orElseThrow(Exception::new);
+        return Credentials.approve(token);
     }
 
     // #region builder methods
@@ -373,4 +368,22 @@ public class RapidTableConnector {
         }
     }
     // #endregion
+
+    record Credentials(String token, LocalDateTime approvedAt) {
+        boolean isPermitted() {
+            if (Objects.isNull(token)) {
+                return false;
+            }
+            final var diff = MINUTES.between(LocalDateTime.now(), approvedAt);
+            return Math.abs(diff) > 50;
+        }
+
+        static Credentials empty() {
+            return new Credentials(null, LocalDateTime.MIN);
+        }
+
+        static Credentials approve(String token) {
+            return new Credentials(token, LocalDateTime.now());
+        }
+    }
 }
