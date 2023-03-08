@@ -14,7 +14,7 @@ plugins {
 }
 
 group 'com.rapid-table.sdk'
-version '0.0.1'
+version '0.0.2'
 
 sourceCompatibility = '17'
 
@@ -62,7 +62,7 @@ publishing {
             pom {
                 name = 'rtc4j'
                 description = 'RapidTableConnector provides an SDK that allows easy CRUD operations using the Rest API provided by RapidTable.'
-                url = 'https://github.com/rapid-table/rapid-table-connector.git'
+                url = 'https://rapid-table.com'
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
