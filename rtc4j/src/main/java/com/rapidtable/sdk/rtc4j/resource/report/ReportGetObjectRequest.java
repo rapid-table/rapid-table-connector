@@ -18,7 +18,7 @@ import com.rapidtable.sdk.rtc4j.resource.PathConfig;
 
 import java.util.Objects;
 
-import static com.rapidtable.sdk.rtc4j.resource.PathConfig.OBJECT_PATH_PATTERN;
+import static com.rapidtable.sdk.rtc4j.resource.PathConfig.REPORT_OBJECT_PATH_PATTERN;
 
 public class ReportGetObjectRequest implements IRequest {
     private final String path;
@@ -54,7 +54,7 @@ public class ReportGetObjectRequest implements IRequest {
 
         public Builder target(final Object value) {
             if (Objects.nonNull(value) && value instanceof String path) {
-                final var matcher = OBJECT_PATH_PATTERN.matcher(path);
+                final var matcher = REPORT_OBJECT_PATH_PATTERN.matcher(path);
                 if (matcher.matches()) {
                     final var workspaceId = matcher.group("wid");
                     final var projectId = matcher.group("pid");

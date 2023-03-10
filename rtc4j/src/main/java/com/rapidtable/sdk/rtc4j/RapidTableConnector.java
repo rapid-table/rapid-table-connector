@@ -17,14 +17,15 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.rapidtable.sdk.rtc4j.resource.GetObjectResponse;
 import com.rapidtable.sdk.rtc4j.resource.IDeleteRequest;
 import com.rapidtable.sdk.rtc4j.resource.IGenerateIdRequest;
 import com.rapidtable.sdk.rtc4j.resource.IPutObjectRequest;
 import com.rapidtable.sdk.rtc4j.resource.IRequest;
 import com.rapidtable.sdk.rtc4j.resource.PathConfig;
 
-import java.io.InputStream;
 import java.net.URI;
+import java.net.URLDecoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -32,6 +33,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
 public class RapidTableConnector {
@@ -142,7 +144,7 @@ public class RapidTableConnector {
         return mapper.readValue(response.body(), classType);
     }
 
-    public InputStream getObject(final IRequest request) throws Exception {
+    public GetObjectResponse getObject(final IRequest request) throws Exception {
         if (!credentials.isPermitted()) {
             this.credentials = permission();
         }
@@ -163,7 +165,17 @@ public class RapidTableConnector {
         if (response.statusCode() != 200) {
             throw new Exception();
         }
-        return response.body();
+        final var fileName = response.headers()
+            .firstValue("etag")
+            .map(value -> URLDecoder.decode(value, UTF_8))
+            .orElse("");
+        final var contentType = response.headers()
+            .firstValue("content-type")
+            .orElse("");
+        final var contentLength = response.headers()
+            .firstValueAsLong("content-length")
+            .orElse(0L);
+        return new GetObjectResponse(fileName, contentType, contentLength, response.body());
     }
 
     public String putObject(final IPutObjectRequest request) throws Exception {

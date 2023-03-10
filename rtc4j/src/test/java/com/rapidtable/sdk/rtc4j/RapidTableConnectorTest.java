@@ -105,11 +105,13 @@
 //
 //            // download
 //            final var objectRequest = DriveGetObjectRequest.builder()
-//                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
-//                .objectId(RTC4J_TEST_OBJECT_ID)
+//                .path(metadata.getPath())
 //                .build();
-//            try (final var inputStream = connector.getObject(objectRequest);
-//                 final var outputStream = new FileOutputStream(Path.of("out", metadata.getName()).toFile())) {
+//            final var object = connector.getObject(objectRequest);
+//            System.out.println("object.getContentType() = " + object.getContentType());
+//            System.out.println("object.getContentLength()() = " + object.getContentLength());
+//            try (final var inputStream = object.getData();
+//                 final var outputStream = new FileOutputStream(Path.of("out", object.getFileName()).toFile())) {
 //                byte[] buffer = new byte[1024];
 //                int bytesRead;
 //                while ((bytesRead = inputStream.read(buffer)) != -1) {
@@ -168,8 +170,11 @@
 //                .target(fieldValue.get(0))
 //                .build();
 //
-//            try (final var inputStream = connector.getObject(objectRequest);
-//                 final var outputStream = new FileOutputStream(Path.of("out", testImageFieldId).toFile())) {
+//            final var object = connector.getObject(objectRequest);
+//            System.out.println("object.getContentType() = " + object.getContentType());
+//            System.out.println("object.getContentLength()() = " + object.getContentLength());
+//            try (final var inputStream = object.getData();
+//                 final var outputStream = new FileOutputStream(Path.of("out", object.getFileName()).toFile())) {
 //                byte[] buffer = new byte[1024];
 //                int bytesRead;
 //                while ((bytesRead = inputStream.read(buffer)) != -1) {

@@ -19,7 +19,7 @@ import com.rapidtable.sdk.rtc4j.resource.PathConfig;
 import java.io.IOException;
 import java.util.Objects;
 
-import static com.rapidtable.sdk.rtc4j.resource.PathConfig.OBJECT_PATH_PATTERN;
+import static com.rapidtable.sdk.rtc4j.resource.PathConfig.REPORT_OBJECT_PATH_PATTERN;
 
 public class ReportDeleteObjectRequest implements IDeleteRequest {
     private final String path;
@@ -50,7 +50,7 @@ public class ReportDeleteObjectRequest implements IDeleteRequest {
 
         public ReportDeleteObjectRequest build() throws IOException {
             if (Objects.nonNull(target)) {
-                final var matcher = OBJECT_PATH_PATTERN.matcher(target);
+                final var matcher = REPORT_OBJECT_PATH_PATTERN.matcher(target);
                 if (!matcher.matches()) {
                     throw new IllegalArgumentException();
                 }

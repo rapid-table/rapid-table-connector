@@ -16,13 +16,17 @@ package com.rapidtable.sdk.rtc4j.resource.drive;
 import com.rapidtable.sdk.rtc4j.resource.IRequest;
 import com.rapidtable.sdk.rtc4j.resource.PathConfig;
 
+import java.util.Objects;
+import java.util.regex.Matcher;
+
+import static com.rapidtable.sdk.rtc4j.resource.PathConfig.DRIVE_OBJECT_PATH_PATTERN;
+import static com.rapidtable.sdk.rtc4j.resource.PathConfig.REPORT_OBJECT_PATH_PATTERN;
+
 public class DriveGetObjectRequest implements IRequest {
     private final String path;
-    private final String query;
 
-    DriveGetObjectRequest(final String path, final String query) {
+    DriveGetObjectRequest(final String path) {
         this.path = path;
-        this.query = query;
     }
 
     public String getPath() {
@@ -30,7 +34,7 @@ public class DriveGetObjectRequest implements IRequest {
     }
 
     public String getQuery() {
-        return query;
+        return null;
     }
 
     public String getBody() {
@@ -42,22 +46,36 @@ public class DriveGetObjectRequest implements IRequest {
     }
 
     public static class Builder {
-        private String workspaceId = null;
-        private String objectId = null;
+        private String path = null;
 
         public DriveGetObjectRequest build() {
-            final var path = PathConfig.ROOT + PathConfig.WORKSPACE + String.format("/%s", workspaceId) +
-                PathConfig.DRIVES + PathConfig.OBJECTS + String.format("/%s", objectId);
-            return new DriveGetObjectRequest(path, null);
+            if (Objects.isNull(path)) {
+                throw new IllegalArgumentException();
+            }
+            return new DriveGetObjectRequest(path);
         }
 
-        public Builder workspaceId(final String workspaceId) {
-            this.workspaceId = workspaceId;
-            return this;
-        }
+        public Builder path(final String path) {
+            Matcher matcher;
 
-        public Builder objectId(final String objectId) {
-            this.objectId = objectId;
+            if ((matcher = REPORT_OBJECT_PATH_PATTERN.matcher(path)).matches()) {
+                final var workspaceId = matcher.group("wid");
+                final var projectId = matcher.group("pid");
+                final var reportId = matcher.group("rid");
+                final var objectId = matcher.group("oid");
+                this.path = PathConfig.ROOT + PathConfig.WORKSPACE + String.format("/%s", workspaceId) +
+                    PathConfig.PROJECTS + String.format("/%s", projectId) +
+                    PathConfig.REPORTS + String.format("/%s", reportId) +
+                    PathConfig.OBJECTS + String.format("/%s", objectId);
+
+            } else if ((matcher = DRIVE_OBJECT_PATH_PATTERN.matcher(path)).matches()) {
+                final var workspaceId = matcher.group("wid");
+                final var objectId = matcher.group("oid");
+
+                this.path = PathConfig.ROOT + PathConfig.WORKSPACE + String.format("/%s", workspaceId) +
+                    PathConfig.DRIVES + PathConfig.OBJECTS + String.format("/%s", objectId);
+            }
+
             return this;
         }
     }

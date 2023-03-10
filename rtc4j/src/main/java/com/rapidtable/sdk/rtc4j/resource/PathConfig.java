@@ -29,7 +29,11 @@ public class PathConfig {
     public static final String SEARCH = "/search";
     public static final String COUNT = "/count";
 
-    public static final Pattern OBJECT_PATH_PATTERN = Pattern
+    public static final Pattern REPORT_OBJECT_PATH_PATTERN = Pattern
         .compile("^reports/(?<wid>[0-9a-z_-]+)/(?<pid>[0-9a-z_-]+)/(?<rid>[0-9a-z_-]+)/objects/(?<oid>[0-9a-z_-]+).*",
+            CASE_INSENSITIVE);
+
+    public static final Pattern DRIVE_OBJECT_PATH_PATTERN = Pattern
+        .compile("^drives/(?<wid>[0-9a-z_-]+)/objects/(?<oid>[0-9a-z_-]+).*",
             CASE_INSENSITIVE);
 }
