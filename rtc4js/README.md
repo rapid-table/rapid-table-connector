@@ -22,8 +22,8 @@ npm install rtc4js
 import { RapidTableConnector } from 'rtc4js';
 
 const connector = RapidTableConnector.builder()
-    .accessId("************************")
-    .accessKey("developer@example.com")
+    .accessId("developer@example.com")
+    .accessKey("************************")
     .endpoint("rapid-table.example.com")
     .build();
 ```

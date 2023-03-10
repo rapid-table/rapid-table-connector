@@ -26,8 +26,8 @@ implementation 'com.rapid-table.sdk:rtc4j:0.0.4'
 ### Create a connection instance
 ```java
 RapidTableConnector connector = RapidTableConnector.builder()
-    .accessId("************************")
-    .accessKey("developer@example.com")
+    .accessId("developer@example.com")
+    .accessKey("************************")
     .endpoint("rapid-table.example.com")
     .build();
 ```
