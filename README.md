@@ -2,6 +2,7 @@
 RapidTableConnector provides an SDK that allows easy CRUD operations using the Rest API provided by [RapidTable](https://rapid-table.com/).
 
 ## Getting started
+
 ### Maven
 ```xml
 <dependency>
@@ -10,10 +11,14 @@ RapidTableConnector provides an SDK that allows easy CRUD operations using the R
     <version>0.0.4</version>
 </dependency>
 ```
+
 ### Gradle
 ```
 implementation 'com.rapid-table.sdk:rtc4j:0.0.4'
 ```
+
+### Javascript
+[See here for how to implement Javascript](./rtc4js/README.md)
 
 ---
 
