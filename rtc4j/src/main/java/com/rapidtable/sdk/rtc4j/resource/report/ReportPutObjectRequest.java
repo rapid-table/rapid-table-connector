@@ -18,10 +18,13 @@ import com.rapidtable.sdk.rtc4j.resource.PathConfig;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.net.http.HttpRequest;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class ReportPutObjectRequest implements IPutObjectRequest {
     private final String path;
@@ -73,7 +76,9 @@ public class ReportPutObjectRequest implements IPutObjectRequest {
                 os.write(("--" + boundary + "\r\n" +
                     "Content-Disposition: form-data;" +
                     " name=\"file\";" +
-                    " filename=\"" + fileName + "\"\r\n" +
+                    " filename*=utf-8''" + URLEncoder
+                    .encode(fileName, UTF_8)
+                    .replace("+", "%20") + "\r\n" +
                     "Content-Type: " + contentType + "\r\n" +
                     "\r\n").getBytes());
                 os.write(Files.readAllBytes(file));

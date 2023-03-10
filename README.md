@@ -7,12 +7,12 @@ RapidTableConnector provides an SDK that allows easy CRUD operations using the R
 <dependency>
     <groupId>com.rapid-table.sdk</groupId>
     <artifactId>rtc4j</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
 </dependency>
 ```
 ### Gradle
 ```
-implementation 'com.rapid-table.sdk:rtc4j:0.0.3'
+implementation 'com.rapid-table.sdk:rtc4j:0.0.4'
 ```
 
 ---
@@ -63,11 +63,11 @@ final var metadata = connector.get(metadataRequest, DriveResponse.class);
 
 // download
 final var objectRequest = DriveGetObjectRequest.builder()
-    .workspaceId("EXAMPLE WORKSPACE_ID")
-    .objectId("EXAMPLE OBJECT_ID")
+    .path(metadata.getPath())
     .build();
-try (final var inputStream = connector.getObject(objectRequest);
-     final var outputStream = new FileOutputStream(Path.of("out", metadata.getName()).toFile())) {
+final var object = connector.getObject(objectRequest);
+try (final var inputStream = object.getData();
+     final var outputStream = new FileOutputStream(Path.of("out", object.getFileName()).toFile())) {
     byte[] buffer = new byte[1024];
     int bytesRead;
     while ((bytesRead = inputStream.read(buffer)) != -1) {
@@ -133,8 +133,9 @@ final var objectRequest = ReportGetObjectRequest.builder()
     .target(fieldValue.get(0))
     .build();
 
-try (final var inputStream = connector.getObject(objectRequest);
-        final var outputStream = new FileOutputStream(Path.of("out", testImageFieldId).toFile())) {
+final var object = connector.getObject(objectRequest);
+try (final var inputStream = object.getData();
+        final var outputStream = new FileOutputStream(Path.of("out", object.getFileName()).toFile())) {
     byte[] buffer = new byte[1024];
     int bytesRead;
     while ((bytesRead = inputStream.read(buffer)) != -1) {
