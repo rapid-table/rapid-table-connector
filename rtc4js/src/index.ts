@@ -9,6 +9,7 @@ export { ReportDeleteRequest } from './resource/report/report-delete-request';
 export { ReportGenerateIdRequest } from './resource/report/report-generate-id-request';
 export { ReportGetObjectRequest } from './resource/report/report-get-object-request';
 export { ReportGetRequest } from './resource/report/report-get-request';
+export { ReportBulkGetRequest } from './resource/report/report-bulk-get-request';
 export { ReportPutObjectRequest } from './resource/report/report-put-object-request';
 export { ReportResponse } from './resource/report/report-response';
 export { ReportSearchRequest } from './resource/report/report-search-request';
