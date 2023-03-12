@@ -144,6 +144,35 @@ public class RapidTableConnector {
         return mapper.readValue(response.body(), classType);
     }
 
+    public <T> List<T> bulkGet(final IRequest request, final Class<T> classType) throws Exception {
+        if (!credentials.isPermitted()) {
+            this.credentials = permission();
+        }
+
+        if (Objects.isNull(request.getPath())) {
+            throw new IllegalArgumentException();
+        }
+
+        final var httpRequest = HttpRequest.newBuilder()
+            .GET()
+            .uri(new URI(schema, host, request.getPath(), request.getQuery(), null))
+            .setHeader(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON_VALUE)
+            .setHeader(AUTHORIZATION, credentials.token())
+            .build();
+
+        final var response = client
+            .send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() != 200) {
+            throw new Exception();
+        }
+        final var body = response.body();
+
+        final var collectionType = mapper.getTypeFactory()
+            .constructCollectionType(List.class, classType);
+
+        return mapper.readValue(body, collectionType);
+    }
+
     public GetObjectResponse getObject(final IRequest request) throws Exception {
         if (!credentials.isPermitted()) {
             this.credentials = permission();

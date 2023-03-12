@@ -13,6 +13,7 @@
 //
 //package com.rapidtable.sdk.rtc4j;
 //
+//import com.rapidtable.sdk.rtc4j.resource.report.ReportBulkGetRequest;
 //import org.junit.jupiter.api.Nested;
 //import org.junit.jupiter.api.Test;
 //import com.rapidtable.sdk.rtc4j.exceptions.TooManyRequestException;
@@ -183,6 +184,18 @@
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //            }
+//        }
+//
+//        @Test
+//        void bulkGet() throws Exception {
+//            final var request = ReportBulkGetRequest.builder()
+//                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                .projectId(RTC4J_TEST_PROJECT_ID)
+//                .ids("2dKW3t_rRCVsa782EPe0D", "KDsPyA8nkqCQ8IxjnjI4D", "n_Ujd4xm3cS-MayoWqd5G")
+//                .build();
+//            final var response = connector.bulkGet(request, ReportResponse.class);
+//            // FIXME
+//            System.out.println("Report bulkGet = " + response.size());
 //        }
 //
 //        @Test

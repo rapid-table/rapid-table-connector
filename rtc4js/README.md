@@ -130,6 +130,20 @@ const report = await connector.get(request, ReportResponse.of);
 console.log('report', report);
 ```
 
+### Projects - Get reports (Bulk operation)
+> Get report for a specific project in this any workspace.
+```js
+import { ReportBulkGetRequest, ReportResponse } from 'rtc4js';
+
+const request = ReportBulkGetRequest.builder()
+    .workspaceId('RTC4J_TEST_WORKSPACE_ID')
+    .projectId('RTC4J_TEST_PROJECT_ID')
+    .ids("EXAMPLE REPORT_ID1", "EXAMPLE REPORT_ID2", "EXAMPLE REPORT_ID3")
+    .build();
+const reports = await connector.bulkGet(request, ReportResponse.of);
+console.log('reports', reports);
+```
+
 ### Projects - Get report object
 > Get report object for a specific object data in this any workspace.
 ```js

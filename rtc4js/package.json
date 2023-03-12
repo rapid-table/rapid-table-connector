@@ -1,6 +1,6 @@
 {
   "name": "rtc4js",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "RapidTableConnector provides an SDK that allows easy CRUD operations using the Rest API provided by RapidTable.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

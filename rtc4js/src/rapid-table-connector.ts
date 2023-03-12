@@ -109,6 +109,30 @@ export class RapidTableConnector {
         return res.data as T;
     }
 
+    public async bulkGet<T>(request: IRequest, instanceFn?: (arg: T) => T): Promise<T[]> {
+        if (!this.credentials.isPermitted()) {
+            this.credentials = await this.permission();
+        }
+
+        if (!request.getPath()) {
+            return Promise.reject(`IllegalArgumentException`);
+        }
+
+        const headers = new AxiosHeaders();
+        headers.set(AUTHORIZATION_HEADER, this.credentials.token);
+
+        const params = request.getQuery();
+
+        const res = await this.client.get<T[]>(request.getPath(), { headers, params });
+        if (res.status !== 200) {
+            return Promise.reject(`get failed: ${res.status}`);
+        }
+        if (instanceFn instanceof Function) {
+            return res.data.map(item => instanceFn(item));
+        }
+        return res.data;
+    }
+
     public async getObject(request: IRequest): Promise<GetObjectResponse> {
         if (!this.credentials.isPermitted()) {
             this.credentials = await this.permission();

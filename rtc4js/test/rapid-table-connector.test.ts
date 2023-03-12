@@ -26,6 +26,7 @@ import { ReportDeleteRequest } from '../src/resource/report/report-delete-reques
 import { ReportGenerateIdRequest } from '../src/resource/report/report-generate-id-request';
 import { ReportGetObjectRequest } from '../src/resource/report/report-get-object-request';
 import { ReportGetRequest } from '../src/resource/report/report-get-request';
+import { ReportBulkGetRequest } from '../src/resource/report/report-bulk-get-request';
 import { ReportPutObjectRequest } from '../src/resource/report/report-put-object-request';
 import { ReportResponse } from '../src/resource/report/report-response';
 import { ReportSearchRequest } from '../src/resource/report/report-search-request';
@@ -163,6 +164,16 @@ const connector = RapidTableConnector.builder()
 //     } catch (ex) {
 //         console.error(ex);
 //     }
+// });
+
+// test('report bulkGet', async () => {
+//     const request = ReportBulkGetRequest.builder()
+//         .workspaceId(RTC4J_TEST_WORKSPACE_ID || '')
+//         .projectId(RTC4J_TEST_PROJECT_ID || '')
+//         .ids("2dKW3t_rRCVsa782EPe0D", "KDsPyA8nkqCQ8IxjnjI4D", "n_Ujd4xm3cS-MayoWqd5G")
+//         .build();
+//     const report = await connector.bulkGet(request, ReportResponse.of);
+//     console.log('report', report);
 // });
 
 // test('report generateId', async () => {
