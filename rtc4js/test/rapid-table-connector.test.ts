@@ -15,6 +15,7 @@ import dotenv from 'dotenv';
 import * as fs from 'fs';
 import { Blob } from 'buffer';
 
+import { expect, jest, test } from '@jest/globals';
 import { RapidTableConnector } from '../src/rapid-table-connector';
 import { DriveGetMetadataRequest } from '../src/resource/drive/drive-get-metadata-request';
 import { DriveGetObjectRequest } from '../src/resource/drive/drive-get-object-request';
@@ -25,6 +26,8 @@ import { ReportCreateRequest } from '../src/resource/report/report-create-reques
 import { ReportDeleteRequest } from '../src/resource/report/report-delete-request';
 import { ReportGenerateIdRequest } from '../src/resource/report/report-generate-id-request';
 import { ReportGetObjectRequest } from '../src/resource/report/report-get-object-request';
+import { SchemaGetRequest } from '../src/resource/project/schema-get-request';
+import { SchemaField } from '../src/resource/project/schema-field';
 import { ReportGetRequest } from '../src/resource/report/report-get-request';
 import { ReportBulkGetRequest } from '../src/resource/report/report-bulk-get-request';
 import { ReportPutObjectRequest } from '../src/resource/report/report-put-object-request';
@@ -35,6 +38,7 @@ import { ReportDeleteObjectRequest } from '../src/resource/report/report-delete-
 import { DriveSearchRequest } from '../src/resource/drive/drive-search-request';
 import { DriveComponentType } from '../src/resource/drive/drive-component-type';
 import { DriveCountRequest } from '../src/resource/drive/drive-count-request';
+
 dotenv.config();
 
 const {
@@ -102,6 +106,22 @@ const connector = RapidTableConnector.builder()
 //             .build();
 //         const asset = await connector.getObject(objectRequest);
 //         writeAsset(asset);
+//     } catch (ex) {
+//         console.error(ex);
+//     }
+// });
+//#endregion
+
+//#region project
+// test('get schema', async () => {
+//     const request = SchemaGetRequest.builder()
+//         .workspaceId(RTC4J_TEST_WORKSPACE_ID || '')
+//         .projectId(RTC4J_TEST_PROJECT_ID || '')
+//         .build();
+//     try {
+//         const results = await connector.get<SchemaField[]>(request);
+//         expect(results.length)
+//             .toBe(8);
 //     } catch (ex) {
 //         console.error(ex);
 //     }

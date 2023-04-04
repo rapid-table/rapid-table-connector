@@ -24,6 +24,7 @@ public class PathConfig {
     public static final String DRIVES = "/drives";
     public static final String PROJECTS = "/projects";
     public static final String REPORTS = "/reports";
+    public static final String SCHEMA = "/schema";
     public static final String OBJECTS = "/objects";
     public static final String METADATA = "/metadata";
     public static final String SEARCH = "/search";

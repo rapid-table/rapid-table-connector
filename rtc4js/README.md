@@ -88,6 +88,16 @@ try {
 
 ## Usage - Projects Report
 
+### Projects - Get schema
+> Gets schema information within a specific project in this any workspace.
+```java
+const request = SchemaGetRequest.builder()
+    .workspaceId('RTC4J_TEST_WORKSPACE_ID')
+    .projectId('RTC4J_TEST_PROJECT_ID')
+    .build();
+const results = await connector.get<SchemaField[]>(request);
+```
+
 ### Projects - Search reports
 > Search reports for a specific project in this any workspace.
 ```js

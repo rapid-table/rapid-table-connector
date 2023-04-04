@@ -18,6 +18,7 @@ export class PathConfig {
     public static DRIVES: string = '/drives';
     public static PROJECTS: string = '/projects';
     public static REPORTS: string = '/reports';
+    public static SCHEMA: string = '/schema';
     public static OBJECTS: string = '/objects';
     public static METADATA: string = '/metadata';
     public static SEARCH: string = '/search';

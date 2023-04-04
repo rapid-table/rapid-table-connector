@@ -13,6 +13,8 @@
 //
 //package com.rapidtable.sdk.rtc4j;
 //
+//import com.rapidtable.sdk.rtc4j.resource.project.SchemaGetRequest;
+//import com.rapidtable.sdk.rtc4j.resource.project.SchemaField;
 //import com.rapidtable.sdk.rtc4j.resource.report.ReportBulkGetRequest;
 //import org.junit.jupiter.api.Nested;
 //import org.junit.jupiter.api.Test;
@@ -125,6 +127,21 @@
 //    }
 //
 //    @Nested
+//    class Project {
+//        @Test
+//        void getSchema() throws Exception {
+//            final var request = SchemaGetRequest.builder()
+//                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                .projectId(RTC4J_TEST_PROJECT_ID)
+//                .build();
+//            final var response = connector.get(request, SchemaField[].class);
+//            assertEquals(8, response.length);
+//            final var settings = response[0].getSettings();
+//            System.out.println("settings = " + settings);
+//        }
+//    }
+//
+//    @Nested
 //    class Report {
 //        @Test
 //        void search() throws Exception {
@@ -187,7 +204,7 @@
 //        }
 //
 //        @Test
-//        void bulkGet() throws Exception {
+//        void bulkGet() throws Exception, TooManyRequestException {
 //            final var request = ReportBulkGetRequest.builder()
 //                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
 //                .projectId(RTC4J_TEST_PROJECT_ID)
