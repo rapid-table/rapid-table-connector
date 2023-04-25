@@ -40,6 +40,10 @@ public class ReportResponse {
      */
     private String formId;
     /**
+     * Project ID of the report
+     */
+    private String projectId;
+    /**
      * Returns each field as an associative array (key ... field id, value ... input value)
      */
     private Map<String, Object> fields;
@@ -48,9 +52,10 @@ public class ReportResponse {
 
     }
 
-    public ReportResponse(String id, String formId, Map<String, Object> fields) {
+    public ReportResponse(String id, String formId, String projectId, Map<String, Object> fields) {
         this.id = id;
         this.formId = formId;
+        this.projectId = projectId;
         this.fields = fields;
     }
 
@@ -68,6 +73,14 @@ public class ReportResponse {
 
     public void setFormId(String formId) {
         this.formId = formId;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
     public Map<String, Object> getFields() {

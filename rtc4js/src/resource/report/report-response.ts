@@ -19,12 +19,13 @@ export class ReportResponse {
     constructor(
         public id: string = '',
         public formId: string = '',
+        public projectId: string = '',
         public fields: { [key: string]: unknown } = {},
     ) {
     }
 
-    public static of({ id, formId, fields }: ReportResponse): ReportResponse {
-        return new ReportResponse(id, formId, fields);
+    public static of({ id, formId, projectId, fields }: ReportResponse): ReportResponse {
+        return new ReportResponse(id, formId, projectId, fields);
     }
 
     public getFieldAs<T>(fieldId: string): T | null {

@@ -23,6 +23,7 @@ export class PathConfig {
     public static METADATA: string = '/metadata';
     public static SEARCH: string = '/search';
     public static COUNT: string = '/count';
+    public static AGGREGATE: string = '/aggs';
 
     public static REPORT_OBJECT_PATH_PATTERN = new RegExp(/^reports\/(?<wid>[a-z0-9_-]+?)\/(?<pid>[a-z0-9_-]+?)\/(?<rid>[a-z0-9_-]+?)\/objects\/(?<oid>[a-z0-9_-]+)/i);
     public static DRIVE_OBJECT_PATH_PATTERN = new RegExp(/^drives\/(?<wid>[a-z0-9_-]+?)\/objects\/(?<oid>[a-z0-9_-]+)/i);

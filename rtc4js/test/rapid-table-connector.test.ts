@@ -32,6 +32,10 @@ import { ReportGetRequest } from '../src/resource/report/report-get-request';
 import { ReportBulkGetRequest } from '../src/resource/report/report-bulk-get-request';
 import { ReportPutObjectRequest } from '../src/resource/report/report-put-object-request';
 import { ReportResponse } from '../src/resource/report/report-response';
+import { ReportAggregateValueRequest } from '../src/resource/report/report-aggregate-value-request';
+import { AggregateValueResponse } from '../src/resource/report/aggregate-value-response';
+import { ReportBulkSearchRequest } from '../src/resource/report/report-bulk-search-request';
+import { ReportBulkCountRequest } from '../src/resource/report/report-bulk-count-request';
 import { ReportSearchRequest } from '../src/resource/report/report-search-request';
 import { ReportUpdateRequest } from '../src/resource/report/report-update-request';
 import { ReportDeleteObjectRequest } from '../src/resource/report/report-delete-object-request';
@@ -154,6 +158,54 @@ const connector = RapidTableConnector.builder()
 //         const results = await connector.count(request);
 //         expect(results)
 //             .toBe(44);
+//     } catch (ex) {
+//         console.error(ex);
+//     }
+// });
+
+// test('report bulk search', async () => {
+//     const request = ReportBulkSearchRequest.builder()
+//         .workspaceId(RTC4J_TEST_WORKSPACE_ID || '')
+//         .ids("XJ-sbocpVOsKlmaUyzJfT", "cobukD_dO41NcU3wOBKwY")
+//         .query("金融２２")
+//         .page(0)
+//         .size(15)
+//         .build();
+//     try {
+//         const results = await connector.search(request, ReportResponse.of);
+//         expect(results.length)
+//             .toBe(15);
+//     } catch (ex) {
+//         console.error(ex);
+//     }
+// });
+
+// test('report bulk count', async () => {
+//     const request = ReportBulkCountRequest.builder()
+//         .workspaceId(RTC4J_TEST_WORKSPACE_ID || '')
+//         .ids("XJ-sbocpVOsKlmaUyzJfT", "cobukD_dO41NcU3wOBKwY")
+//         .query("金融２２")
+//         .build();
+//     try {
+//         const results = await connector.count(request);
+//         expect(results)
+//             .toBe(40);
+//     } catch (ex) {
+//         console.error(ex);
+//     }
+// });
+
+// test('report aggregate', async () => {
+//     const request = ReportAggregateValueRequest.builder()
+//         .workspaceId(RTC4J_TEST_WORKSPACE_ID || '')
+//         .ids("cobukD_dO41NcU3wOBKwY", "50Tbhd8aSfQN9_NgUuHGU")
+//         .fieldId("Hn0Y4fj4G5")
+//         .build();
+//     try {
+//         const results = await connector.bulkGet(request, AggregateValueResponse.of);
+//         console.log(results);
+//         expect(results.length)
+//             .toBe(42);
 //     } catch (ex) {
 //         console.error(ex);
 //     }

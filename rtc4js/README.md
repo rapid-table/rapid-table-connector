@@ -113,6 +113,20 @@ const results = await connector.search(request, ReportResponse.of);
 console.log('results', results);
 ```
 
+### Projects - Search reports (Bulk operation)
+> Search reports for multiple projects in this any workspace.
+```js
+import { ReportBulkSearchRequest, ReportResponse } from 'rtc4js';
+
+const request = ReportBulkSearchRequest.builder()
+    .workspaceId("EXAMPLE WORKSPACE_ID")
+    .ids("EXAMPLE PROJECT_ID1", "EXAMPLE PROJECT_ID2")
+    .page(0)
+    .size(15)
+    .build();
+const response = connector.search(request, ReportResponse.of);
+```
+
 ### Projects - Count reports
 > Count reports for a specific project in this any workspace.
 ```js
@@ -123,7 +137,18 @@ const request = ReportCountRequest.builder()
     .projectId('RTC4J_TEST_PROJECT_ID')
     .build();
 const results = await connector.count(request);
-console.log('results', results);
+```
+
+### Projects - Count reports (Bulk operation)
+> Count reports for for multiple projects in this any workspace.
+```js
+import { ReportBulkCountRequest } from 'rtc4js';
+
+const request = ReportBulkCountRequest.builder()
+    .workspaceId('RTC4J_TEST_WORKSPACE_ID')
+    .ids("EXAMPLE PROJECT_ID1", "EXAMPLE PROJECT_ID2")
+    .build();
+const results = await connector.count(request);
 ```
 
 ### Projects - Get report
@@ -295,6 +320,19 @@ const request = ReportDeleteObjectRequest.builder()
     .target(target)
     .build();
 await connector.delete(request);
+```
+
+### Projects - Aggregate report values
+> Aggregates the values ​​of a report field for multiple projects in this any workspace
+```js
+import { ReportAggregateValueRequest, AggregateValueResponse } from 'rtc4js';
+
+const request = ReportAggregateValueRequest.builder()
+    .workspaceId('RTC4J_TEST_WORKSPACE_ID')
+    .ids("EXAMPLE PROJECT_ID1", "EXAMPLE PROJECT_ID2")
+    .fieldId("EXAMPLE_TARGET_FIELD_ID")
+    .build();
+const results = await connector.bulkGet(request, AggregateValueResponse.of);
 ```
 
 ### Sample code for report registration

@@ -8,13 +8,13 @@ RapidTableConnector provides an SDK that allows easy CRUD operations using the R
 <dependency>
     <groupId>com.rapid-table.sdk</groupId>
     <artifactId>rtc4j</artifactId>
-    <version>0.0.6</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-implementation 'com.rapid-table.sdk:rtc4j:0.0.6'
+implementation 'com.rapid-table.sdk:rtc4j:0.1.0'
 ```
 
 ### Javascript
@@ -107,12 +107,34 @@ final var request = ReportSearchRequest.builder()
 final var response = connector.search(request, ReportResponse.class);
 ```
 
+### Projects - Search reports (Bulk operation)
+> Search reports for multiple projects in this any workspace.
+```java
+final var request = ReportBulkSearchRequest.builder()
+    .workspaceId("EXAMPLE WORKSPACE_ID")
+    .ids("EXAMPLE PROJECT_ID1", "EXAMPLE PROJECT_ID2")
+    .page(0)
+    .size(15)
+    .build();
+final var response = connector.search(request, ReportResponse.class);
+```
+
 ### Projects - Count reports
 > Count reports for a specific project in this any workspace.
 ```java
 final var request = ReportCountRequest.builder()
     .workspaceId("EXAMPLE WORKSPACE_ID")
     .projectId("EXAMPLE PROJECT_ID")
+    .build();
+final var response = connector.count(request);
+```
+
+### Projects - Count reports (Bulk operation)
+> Count reports for for multiple projects in this any workspace.
+```java
+final var request = ReportBulkCountRequest.builder()
+    .workspaceId("EXAMPLE WORKSPACE_ID")
+    .ids("EXAMPLE PROJECT_ID1", "EXAMPLE PROJECT_ID2")
     .build();
 final var response = connector.count(request);
 ```
@@ -222,6 +244,17 @@ final var request = ReportDeleteObjectRequest.builder()
     .target(target)
     .build();
 connector.delete(request);
+```
+
+### Projects - Aggregate report values
+> Aggregates the values ​​of a report field for multiple projects in this any workspace
+```java
+final var request = ReportAggregateValueRequest.builder()
+    .workspaceId("EXAMPLE WORKSPACE_ID")
+    .ids("EXAMPLE PROJECT_ID1", "EXAMPLE PROJECT_ID2")
+    .fieldId("EXAMPLE_TARGET_FIELD_ID")
+    .build();
+final var response = connector.bulkGet(request, AggregateValueResponse.class);
 ```
 
 ### Sample code for report registration

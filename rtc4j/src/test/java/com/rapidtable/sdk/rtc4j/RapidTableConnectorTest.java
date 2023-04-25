@@ -15,7 +15,11 @@
 //
 //import com.rapidtable.sdk.rtc4j.resource.project.SchemaGetRequest;
 //import com.rapidtable.sdk.rtc4j.resource.project.SchemaField;
+//import com.rapidtable.sdk.rtc4j.resource.report.AggregateValueResponse;
+//import com.rapidtable.sdk.rtc4j.resource.report.ReportAggregateValueRequest;
+//import com.rapidtable.sdk.rtc4j.resource.report.ReportBulkCountRequest;
 //import com.rapidtable.sdk.rtc4j.resource.report.ReportBulkGetRequest;
+//import com.rapidtable.sdk.rtc4j.resource.report.ReportBulkSearchRequest;
 //import org.junit.jupiter.api.Nested;
 //import org.junit.jupiter.api.Test;
 //import com.rapidtable.sdk.rtc4j.exceptions.TooManyRequestException;
@@ -147,9 +151,23 @@
 //        void search() throws Exception {
 //            final var request = ReportSearchRequest.builder()
 //                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
-//                .projectId(RTC4J_TEST_PROJECT_ID)
+//                .projectId("XJ-sbocpVOsKlmaUyzJfT")
 //                .page(0)
 //                .size(15)
+//                .build();
+//            final var response = connector.search(request, ReportResponse.class);
+//            // FIXME
+//            System.out.println("Report search = " + response.size());
+//        }
+//
+//        @Test
+//        void buildSearch() throws Exception, TooManyRequestException {
+//            final var request = ReportBulkSearchRequest.builder()
+//                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                .ids("XJ-sbocpVOsKlmaUyzJfT", "cobukD_dO41NcU3wOBKwY")
+//                .query("金融２２")
+//                .page(0)
+//                .size(100)
 //                .build();
 //            final var response = connector.search(request, ReportResponse.class);
 //            // FIXME
@@ -161,6 +179,18 @@
 //            final var request = ReportCountRequest.builder()
 //                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
 //                .projectId(RTC4J_TEST_PROJECT_ID)
+//                .build();
+//            final var response = connector.count(request);
+//            // FIXME
+//            System.out.println("Report count = " + response);
+//        }
+//
+//        @Test
+//        void buildCount() throws Exception, TooManyRequestException {
+//            final var request = ReportBulkCountRequest.builder()
+//                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                .ids("XJ-sbocpVOsKlmaUyzJfT", "cobukD_dO41NcU3wOBKwY")
+//                .query("金融２２")
 //                .build();
 //            final var response = connector.count(request);
 //            // FIXME
@@ -316,6 +346,18 @@
 //                .target(target)
 //                .build();
 //            connector.delete(request);
+//        }
+//
+//        @Test
+//        void aggregate() throws Exception, TooManyRequestException {
+//            final var request = ReportAggregateValueRequest.builder()
+//                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                .ids("cobukD_dO41NcU3wOBKwY", "50Tbhd8aSfQN9_NgUuHGU")
+//                .fieldId("Hn0Y4fj4G5")
+//                .build();
+//            final var response = connector.bulkGet(request, AggregateValueResponse.class);
+//            // FIXME
+//            System.out.println("Report aggregate = " + response);
 //        }
 //
 //        private Map<String, Object> makeDummyFields() {
