@@ -22,6 +22,8 @@ public class PathConfig {
     public static final String PERMISSIONS = "/permissions";
     public static final String WORKSPACE = "/workspace";
     public static final String DRIVES = "/drives";
+    public static final String TAG_GROUPS = "/tag-groups";
+    public static final String TAGS = "/tags";
     public static final String PROJECTS = "/projects";
     public static final String REPORTS = "/reports";
     public static final String SCHEMA = "/schema";
