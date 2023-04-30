@@ -8,13 +8,13 @@ RapidTableConnector provides an SDK that allows easy CRUD operations using the R
 <dependency>
     <groupId>com.rapid-table.sdk</groupId>
     <artifactId>rtc4j</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-implementation 'com.rapid-table.sdk:rtc4j:0.2.0'
+implementation 'com.rapid-table.sdk:rtc4j:0.3.0'
 ```
 
 ### Javascript
@@ -85,6 +85,26 @@ try (final var inputStream = object.getData();
 
 ## Usage - Projects Report
 
+### Projects - Get project
+> Gets project information in this any workspace.
+```java
+final var request = ProjectGetRequest.builder()
+    .workspaceId("EXAMPLE WORKSPACE_ID")
+    .projectId("EXAMPLE PROJECT_ID")
+    .build();
+final var response = connector.get(request, ProjectResponse.class);
+```
+
+### Projects - Get projects (Bulk operation)
+> Gets projects information in this any workspace.
+```java
+final var request = ProjectBulkGetRequest.builder()
+    .workspaceId("EXAMPLE WORKSPACE_ID")
+    .ids("PROJECT_ID1", "PROJECT_ID2")
+    .build();
+final var response = connector.bulkGet(request, ProjectResponse.class);
+```
+
 ### Projects - Get schema
 > Gets schema information within a specific project in this any workspace.
 ```java
@@ -94,6 +114,8 @@ final var request = SchemaGetRequest.builder()
     .build();
 final var response = connector.get(request, SchemaField[].class);
 ```
+
+---
 
 ### Projects - Search reports
 > Search reports for a specific project in this any workspace.

@@ -13,6 +13,9 @@
 //
 //package com.rapidtable.sdk.rtc4j;
 //
+//import com.rapidtable.sdk.rtc4j.resource.project.ProjectBulkGetRequest;
+//import com.rapidtable.sdk.rtc4j.resource.project.ProjectGetRequest;
+//import com.rapidtable.sdk.rtc4j.resource.project.ProjectResponse;
 //import com.rapidtable.sdk.rtc4j.resource.project.SchemaGetRequest;
 //import com.rapidtable.sdk.rtc4j.resource.project.SchemaField;
 //import com.rapidtable.sdk.rtc4j.resource.report.AggregateValueResponse;
@@ -132,6 +135,26 @@
 //
 //    @Nested
 //    class Project {
+//        @Test
+//        void getProject() throws Exception {
+//            final var request = ProjectGetRequest.builder()
+//                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                .projectId(RTC4J_TEST_PROJECT_ID)
+//                .build();
+//            final var response = connector.get(request, ProjectResponse.class);
+//            System.out.println("response = " + response);
+//        }
+//
+//        @Test
+//        void getProjects() throws Exception, TooManyRequestException {
+//            final var request = ProjectBulkGetRequest.builder()
+//                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                .ids(RTC4J_TEST_PROJECT_ID, "pZ5MQaODXEXJi5uSDUn5K")
+//                .build();
+//            final var response = connector.bulkGet(request, ProjectResponse.class);
+//            System.out.println("response = " + response);
+//        }
+//
 //        @Test
 //        void getSchema() throws Exception {
 //            final var request = SchemaGetRequest.builder()
