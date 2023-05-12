@@ -49,7 +49,7 @@ public class ReportBulkCountRequest implements IRequest {
 
     public static class Builder {
         private String workspaceId = null;
-        private List<String> ids = new ArrayList<>();
+        private List<String> projectIds = new ArrayList<>();
         private String query = null;
         private String emp = null;
         private String noemp = null;
@@ -68,14 +68,14 @@ public class ReportBulkCountRequest implements IRequest {
 
             final var params = new ArrayList<String>();
 
-            if (ids.isEmpty()) {
+            if (projectIds.isEmpty()) {
                 throw new IllegalArgumentException();
             }
-            if (ids.size() > 300) {
+            if (projectIds.size() > 300) {
                 throw new TooManyRequestException();
             }
 
-            params.add("ids=" + String.join(",", ids));
+            params.add("projectIds=" + String.join(",", projectIds));
 
             if (Objects.nonNull(query)) {
                 params.add("query=" + query);
@@ -124,8 +124,8 @@ public class ReportBulkCountRequest implements IRequest {
          * Write the project IDs separated by commas.
          * ids=project-id1,project-id2,project-id3
          */
-        public Builder ids(final String... ids) {
-            this.ids.addAll(Arrays.asList(ids));
+        public Builder projectIds(final String... ids) {
+            this.projectIds.addAll(Arrays.asList(ids));
             return this;
         }
 
