@@ -8,13 +8,13 @@ RapidTableConnector provides an SDK that allows easy CRUD operations using the R
 <dependency>
     <groupId>com.rapid-table.sdk</groupId>
     <artifactId>rtc4j</artifactId>
-    <version>0.3.2</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-implementation 'com.rapid-table.sdk:rtc4j:0.3.2'
+implementation 'com.rapid-table.sdk:rtc4j:1.0.0'
 ```
 
 ### Javascript
@@ -134,7 +134,7 @@ final var response = connector.search(request, ReportResponse.class);
 ```java
 final var request = ReportBulkSearchRequest.builder()
     .workspaceId("EXAMPLE WORKSPACE_ID")
-    .ids("EXAMPLE PROJECT_ID1", "EXAMPLE PROJECT_ID2")
+    .projectIds("EXAMPLE PROJECT_ID1", "EXAMPLE PROJECT_ID2")
     .page(0)
     .size(15)
     .build();
@@ -156,7 +156,7 @@ final var response = connector.count(request);
 ```java
 final var request = ReportBulkCountRequest.builder()
     .workspaceId("EXAMPLE WORKSPACE_ID")
-    .ids("EXAMPLE PROJECT_ID1", "EXAMPLE PROJECT_ID2")
+    .projectIds("EXAMPLE PROJECT_ID1", "EXAMPLE PROJECT_ID2")
     .build();
 final var response = connector.count(request);
 ```
@@ -273,7 +273,7 @@ connector.delete(request);
 ```java
 final var request = ReportAggregateValueRequest.builder()
     .workspaceId("EXAMPLE WORKSPACE_ID")
-    .ids("EXAMPLE PROJECT_ID1", "EXAMPLE PROJECT_ID2")
+    .projectIds("EXAMPLE PROJECT_ID1", "EXAMPLE PROJECT_ID2")
     .fieldId("EXAMPLE_TARGET_FIELD_ID")
     .build();
 final var response = connector.bulkGet(request, AggregateValueResponse.class);

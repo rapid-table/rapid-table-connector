@@ -39,7 +39,7 @@ export class ReportBulkCountRequest implements IRequest {
 
 class Builder {
     private _workspaceId: string | null = null;
-    private _ids: string[] = [];
+    private _projectIds: string[] = [];
     private _query: string | null = null;
     private _emp: string | null = null;
     private _noemp: string | null = null;
@@ -58,14 +58,14 @@ class Builder {
 
         const params: { [key: string]: string | number } = {};
 
-        if (!Array.isArray(this._ids) || this._ids.length === 0) {
+        if (!Array.isArray(this._projectIds) || this._projectIds.length === 0) {
             throw new Error('IllegalArgumentException');
         }
-        if (this._ids.length > 300) {
+        if (this._projectIds.length > 300) {
             throw new Error('IllegalArgumentException');
         }
 
-        params['ids'] = this._ids.join(',');
+        params['projectIds'] = this._projectIds.join(',');
 
         if (this._query) {
             params['query'] = this._query;
@@ -113,8 +113,8 @@ class Builder {
      * Write the project IDs separated by commas.
      * ids=project-id1,project-id2,project-id3
      */
-    public ids(...ids: string[]): Builder {
-        this._ids = ids;
+    public projectIds(...ids: string[]): Builder {
+        this._projectIds = ids;
         return this;
     }
 

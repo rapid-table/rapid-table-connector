@@ -120,7 +120,7 @@ import { ReportBulkSearchRequest, ReportResponse } from 'rtc4js';
 
 const request = ReportBulkSearchRequest.builder()
     .workspaceId("EXAMPLE WORKSPACE_ID")
-    .ids("EXAMPLE PROJECT_ID1", "EXAMPLE PROJECT_ID2")
+    .projectIds("EXAMPLE PROJECT_ID1", "EXAMPLE PROJECT_ID2")
     .page(0)
     .size(15)
     .build();
@@ -146,7 +146,7 @@ import { ReportBulkCountRequest } from 'rtc4js';
 
 const request = ReportBulkCountRequest.builder()
     .workspaceId('RTC4J_TEST_WORKSPACE_ID')
-    .ids("EXAMPLE PROJECT_ID1", "EXAMPLE PROJECT_ID2")
+    .projectIds("EXAMPLE PROJECT_ID1", "EXAMPLE PROJECT_ID2")
     .build();
 const results = await connector.count(request);
 ```
@@ -329,7 +329,7 @@ import { ReportAggregateValueRequest, AggregateValueResponse } from 'rtc4js';
 
 const request = ReportAggregateValueRequest.builder()
     .workspaceId('RTC4J_TEST_WORKSPACE_ID')
-    .ids("EXAMPLE PROJECT_ID1", "EXAMPLE PROJECT_ID2")
+    .projectIds("EXAMPLE PROJECT_ID1", "EXAMPLE PROJECT_ID2")
     .fieldId("EXAMPLE_TARGET_FIELD_ID")
     .build();
 const results = await connector.bulkGet(request, AggregateValueResponse.of);
