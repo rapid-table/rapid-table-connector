@@ -59,7 +59,7 @@ public class ReportBulkGetRequest implements IRequest {
             if (ids.isEmpty()) {
                 throw new IllegalArgumentException();
             }
-            if (ids.size() > 100) {
+            if (ids.size() > 300) {
                 throw new TooManyRequestException();
             }
 
