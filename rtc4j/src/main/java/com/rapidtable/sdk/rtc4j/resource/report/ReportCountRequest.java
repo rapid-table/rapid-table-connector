@@ -60,6 +60,7 @@ public class ReportCountRequest implements IRequest {
         private String gt = null;
         private String gte = null;
         private String term = null;
+        private List<String> ids = new ArrayList<>();
 
         public ReportCountRequest build() {
             final var path = PathConfig.ROOT + PathConfig.WORKSPACE + String.format("/%s", workspaceId) +
@@ -101,6 +102,9 @@ public class ReportCountRequest implements IRequest {
             }
             if (Objects.nonNull(term)) {
                 params.add("term=" + term);
+            }
+            if (Objects.nonNull(ids) && !ids.isEmpty()) {
+                params.add("ids=" + String.join(",", ids));
             }
 
             final var query = String.join("&", params);
@@ -233,6 +237,15 @@ public class ReportCountRequest implements IRequest {
          */
         public Builder termTo(final String fieldId, final String to) {
             this.term = String.format("%s:,%s", fieldId, to);
+            return this;
+        }
+
+        /**
+         * Write the report IDs separated by commas.
+         * ids=report-id1,report-id2,report-id3
+         */
+        public Builder ids(final String... ids) {
+            this.ids.addAll(Arrays.asList(ids));
             return this;
         }
     }
