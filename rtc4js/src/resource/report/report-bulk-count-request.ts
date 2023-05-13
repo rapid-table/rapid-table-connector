@@ -111,7 +111,7 @@ class Builder {
 
     /**
      * Write the project IDs separated by commas.
-     * ids=project-id1,project-id2,project-id3
+     * projectIds=project-id1,project-id2,project-id3
      */
     public projectIds(...ids: string[]): Builder {
         this._projectIds = ids;
