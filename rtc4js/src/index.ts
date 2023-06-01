@@ -10,6 +10,7 @@ export { ReportGenerateIdRequest } from './resource/report/report-generate-id-re
 export { ReportGetObjectRequest } from './resource/report/report-get-object-request';
 export { SchemaGetRequest } from './resource/project/schema-get-request';
 export { SchemaField } from './resource/project/schema-field';
+export { SchemaFieldType } from './resource/project/schema-field-type';
 export { ReportGetRequest } from './resource/report/report-get-request';
 export { ReportBulkGetRequest } from './resource/report/report-bulk-get-request';
 export { ReportPutObjectRequest } from './resource/report/report-put-object-request';
