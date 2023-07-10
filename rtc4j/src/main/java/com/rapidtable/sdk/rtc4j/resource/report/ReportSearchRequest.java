@@ -57,6 +57,7 @@ public class ReportSearchRequest implements IRequest {
         private String emp = null;
         private String noemp = null;
         private List<String> includes = null;
+        private List<String> in = null;
         private String eq = null;
         private String neq = null;
         private String lt = null;
@@ -97,6 +98,9 @@ public class ReportSearchRequest implements IRequest {
             }
             if (Objects.nonNull(includes) && !includes.isEmpty()) {
                 params.add("includes=" + String.join(";", includes));
+            }
+            if (Objects.nonNull(in) && !in.isEmpty()) {
+                params.add("in=" + String.join(";", in));
             }
             if (Objects.nonNull(eq)) {
                 params.add("eq=" + eq);
@@ -203,13 +207,24 @@ public class ReportSearchRequest implements IRequest {
         }
 
         /**
-         * Word search (specific keyword).
+         * Exact match for specific field.
          * includes=fieldId1:searchText1;fieldId2:searchText2
          * - For example, the arguments are as follows
          * "fieldId1:searchText1", "fieldId2:searchText2",...
          */
         public Builder includes(final String... includes) {
             this.includes = Arrays.stream(includes).toList();
+            return this;
+        }
+
+        /**
+         * Partial match for specific field.
+         * in=fieldId1:searchText1;fieldId2:searchText2
+         * - For example, the arguments are as follows
+         * "fieldId1:searchText1", "fieldId2:searchText2",...
+         */
+        public Builder in(final String... in) {
+            this.in = Arrays.stream(in).toList();
             return this;
         }
 

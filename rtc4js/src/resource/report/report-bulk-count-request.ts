@@ -44,6 +44,7 @@ class Builder {
     private _emp: string | null = null;
     private _noemp: string | null = null;
     private _includes: string[] = [];
+    private _in: string[] = [];
     private _eq: string | null = null;
     private _neq: string | null = null;
     private _lt: string | null = null;
@@ -76,8 +77,11 @@ class Builder {
         if (this._noemp) {
             params['noemp'] = this._noemp;
         }
-        if (this._includes && this._includes.length > 0) {
+        if (Array.isArray(this._includes) && this._includes.length > 0) {
             params['includes'] = this._includes.join(';');
+        }
+        if (Array.isArray(this._in) && this._in.length > 0) {
+            params['in'] = this._in.join(';');
         }
         if (this._eq) {
             params['eq'] = this._eq;
@@ -146,13 +150,24 @@ class Builder {
     }
 
     /**
-     * Word search (specific keyword).
+     * Exact match for specific field.
      * includes=fieldId1:searchText1;fieldId2:searchText2
      * - For example, the arguments are as follows
      * 'fieldId1:searchText1', 'fieldId2:searchText2',...
      */
     public includes(...includes: string[]): Builder {
         this._includes = includes;
+        return this;
+    }
+
+    /**
+     * Partial match for specific field.
+     * in=fieldId1:searchText1;fieldId2:searchText2
+     * - For example, the arguments are as follows
+     * 'fieldId1:searchText1', 'fieldId2:searchText2',...
+     */
+    public in(...value: string[]): Builder {
+        this._in = value;
         return this;
     }
 
