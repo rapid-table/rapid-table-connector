@@ -17,12 +17,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.rapidtable.sdk.rtc4j.resource.GetObjectResponse;
-import com.rapidtable.sdk.rtc4j.resource.IDeleteRequest;
-import com.rapidtable.sdk.rtc4j.resource.IGenerateIdRequest;
-import com.rapidtable.sdk.rtc4j.resource.IPutObjectRequest;
-import com.rapidtable.sdk.rtc4j.resource.IRequest;
-import com.rapidtable.sdk.rtc4j.resource.PathConfig;
+import com.rapidtable.sdk.rtc4j.resource.*;
 
 import java.net.URI;
 import java.net.URLDecoder;
@@ -360,6 +355,22 @@ public class RapidTableConnector {
     // #region builder methods
     public static RapidTableConnectorBuilder builder() {
         return new RapidTableConnectorBuilder();
+    }
+
+    public boolean healthy() {
+        try {
+            final var httpRequest = HttpRequest.newBuilder()
+                .GET()
+                .uri(new URI(schema, host, PathConfig.VERSION, null, null))
+                .setHeader(HTTP_CONTENT_TYPE_HEADER, HTTP_CONTENT_TYPE_JSON_VALUE)
+                .build();
+
+            final var response = client
+                .send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            return response.statusCode() == 200;
+        } catch (Exception ignored) {
+            return false;
+        }
     }
 
     public static class RapidTableConnectorBuilder {

@@ -52,8 +52,7 @@
 //import java.util.List;
 //import java.util.Map;
 //
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.junit.jupiter.api.Assertions.assertNotNull;
+//import static org.junit.jupiter.api.Assertions.*;
 //
 //class RapidTableConnectorTest {
 //    private static final String RTC4J_TEST_ACCESS_ID = System.getenv("RTC4J_TEST_ACCESS_ID");
@@ -432,6 +431,14 @@
 //            // Url
 //            fields.put("zZiNQEjJ5F", "https://example.com");
 //            return fields;
+//        }
+//    }
+//
+//    @Nested
+//    class HealthCheck {
+//        @Test
+//        void test() {
+//            assertTrue(connector.healthy());
 //        }
 //    }
 //}

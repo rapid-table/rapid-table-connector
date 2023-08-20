@@ -33,6 +33,8 @@ public class PathConfig {
     public static final String COUNT = "/count";
     public static final String AGGREGATE = "/aggs";
 
+    public static final String VERSION = "/version";
+
     public static final Pattern REPORT_OBJECT_PATH_PATTERN = Pattern
         .compile("^reports/(?<wid>[0-9a-z_-]+)/(?<pid>[0-9a-z_-]+)/(?<rid>[0-9a-z_-]+)/objects/(?<oid>[0-9a-z_-]+).*",
             CASE_INSENSITIVE);
