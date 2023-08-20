@@ -375,7 +375,7 @@
 //        void aggregate() throws Exception, TooManyRequestException {
 //            final var request = ReportAggregateValueRequest.builder()
 //                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
-//                .ids("cobukD_dO41NcU3wOBKwY", "50Tbhd8aSfQN9_NgUuHGU")
+//                .projectIds("cobukD_dO41NcU3wOBKwY", "50Tbhd8aSfQN9_NgUuHGU")
 //                .fieldId("Hn0Y4fj4G5")
 //                .build();
 //            final var response = connector.bulkGet(request, AggregateValueResponse.class);
