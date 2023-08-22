@@ -13,46 +13,22 @@
 //
 //package com.rapidtable.sdk.rtc4j;
 //
-//import com.rapidtable.sdk.rtc4j.resource.project.ProjectBulkGetRequest;
-//import com.rapidtable.sdk.rtc4j.resource.project.ProjectGetRequest;
-//import com.rapidtable.sdk.rtc4j.resource.project.ProjectResponse;
-//import com.rapidtable.sdk.rtc4j.resource.project.SchemaGetRequest;
-//import com.rapidtable.sdk.rtc4j.resource.project.SchemaField;
-//import com.rapidtable.sdk.rtc4j.resource.report.AggregateValueResponse;
-//import com.rapidtable.sdk.rtc4j.resource.report.ReportAggregateValueRequest;
-//import com.rapidtable.sdk.rtc4j.resource.report.ReportBulkCountRequest;
-//import com.rapidtable.sdk.rtc4j.resource.report.ReportBulkGetRequest;
-//import com.rapidtable.sdk.rtc4j.resource.report.ReportBulkSearchRequest;
+//import com.rapidtable.sdk.rtc4j.exceptions.TooManyRequestException;
+//import com.rapidtable.sdk.rtc4j.resource.project.*;
+//import com.rapidtable.sdk.rtc4j.resource.project.model.Locales;
+//import com.rapidtable.sdk.rtc4j.resource.project.model.ProjectCreateRequestModel;
+//import com.rapidtable.sdk.rtc4j.resource.project.schema.datetime.SchemaDatetimeSettings;
+//import com.rapidtable.sdk.rtc4j.resource.project.schema.number.SchemaNumberSettings;
+//import com.rapidtable.sdk.rtc4j.resource.project.schema.option.SchemaCheckSettings;
+//import com.rapidtable.sdk.rtc4j.resource.project.schema.option.SchemaRadioSettings;
+//import com.rapidtable.sdk.rtc4j.resource.project.schema.option.SchemaSelectSettings;
+//import com.rapidtable.sdk.rtc4j.resource.project.schema.text.SchemaTextSettings;
+//import com.rapidtable.sdk.rtc4j.resource.report.ReportResponse;
 //import org.junit.jupiter.api.Nested;
 //import org.junit.jupiter.api.Test;
-//import com.rapidtable.sdk.rtc4j.exceptions.TooManyRequestException;
-//import com.rapidtable.sdk.rtc4j.resource.drive.DriveComponentType;
-//import com.rapidtable.sdk.rtc4j.resource.drive.DriveCountRequest;
-//import com.rapidtable.sdk.rtc4j.resource.drive.DriveGetMetadataRequest;
-//import com.rapidtable.sdk.rtc4j.resource.drive.DriveGetObjectRequest;
-//import com.rapidtable.sdk.rtc4j.resource.drive.DriveResponse;
-//import com.rapidtable.sdk.rtc4j.resource.drive.DriveSearchRequest;
-//import com.rapidtable.sdk.rtc4j.resource.report.ReportCountRequest;
-//import com.rapidtable.sdk.rtc4j.resource.report.ReportCreateRequest;
-//import com.rapidtable.sdk.rtc4j.resource.report.ReportDeleteObjectRequest;
-//import com.rapidtable.sdk.rtc4j.resource.report.ReportDeleteRequest;
-//import com.rapidtable.sdk.rtc4j.resource.report.ReportGenerateIdRequest;
-//import com.rapidtable.sdk.rtc4j.resource.report.ReportGetObjectRequest;
-//import com.rapidtable.sdk.rtc4j.resource.report.ReportGetRequest;
-//import com.rapidtable.sdk.rtc4j.resource.report.ReportPutObjectRequest;
-//import com.rapidtable.sdk.rtc4j.resource.report.ReportResponse;
-//import com.rapidtable.sdk.rtc4j.resource.report.ReportSearchRequest;
-//import com.rapidtable.sdk.rtc4j.resource.report.ReportUpdateRequest;
 //
-//import java.io.FileOutputStream;
-//import java.io.IOException;
 //import java.nio.file.Path;
-//import java.time.LocalDateTime;
-//import java.util.HashMap;
-//import java.util.List;
-//import java.util.Map;
-//
-//import static org.junit.jupiter.api.Assertions.*;
+//import java.util.ArrayList;
 //
 //class RapidTableConnectorTest {
 //    private static final String RTC4J_TEST_ACCESS_ID = System.getenv("RTC4J_TEST_ACCESS_ID");
@@ -77,7 +53,7 @@
 //            out.mkdir();
 //        }
 //    }
-//
+
 //    @Nested
 //    class Drive {
 //        @Test
@@ -135,6 +111,46 @@
 //    @Nested
 //    class Project {
 //        @Test
+//        void generateId() throws Exception {
+//            final var requestBuilder = ProjectGenerateIdRequest.builder()
+//                .workspaceId(RTC4J_TEST_WORKSPACE_ID);
+//            final var response = connector.generateId(requestBuilder.build());
+//            // FIXME
+//            System.out.println("Report generateId = " + response);
+//        }
+//
+//        @Test
+//        void crud() throws Exception, TooManyRequestException {
+//            String id;
+//            // generateId
+//            {
+//                final var request = ProjectGenerateIdRequest.builder()
+//                    .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                    .build();
+//                id = connector.generateId(request);
+//            }
+//            // create
+//            {
+//                final var model = new ProjectCreateRequestModel(id, "sdk-project2", "description", Locales.ja);
+//                final var requestBuilder = ProjectCreateRequest.builder()
+//                    .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                    .model(model);
+//                final var response = connector.create(requestBuilder.build(), ReportResponse.class);
+//                // FIXME
+//                System.out.println("Report create = " + response);
+//            }
+//            // delete
+//            {
+//                final var request = ProjectDeleteRequest.builder()
+//                    .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                    .projectId(id)
+//                    .exterminate(true)
+//                    .build();
+//                connector.delete(request);
+//            }
+//        }
+
+        //        @Test
 //        void getProject() throws Exception {
 //            final var request = ProjectGetRequest.builder()
 //                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
@@ -164,6 +180,82 @@
 //            assertEquals(8, response.length);
 //            final var settings = response[0].getSettings();
 //            System.out.println("settings = " + settings);
+//        }
+
+//        @Test
+//        void updateSchema() throws Exception, TooManyRequestException {
+//            String id;
+//            // generateId
+//            {
+//                final var request = ProjectGenerateIdRequest.builder()
+//                    .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                    .build();
+//                id = connector.generateId(request);
+//            }
+//            // create
+//            {
+//                final var model = new ProjectCreateRequestModel(id, "sdk-project3", "description", Locales.ja);
+//                final var requestBuilder = ProjectCreateRequest.builder()
+//                    .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                    .model(model);
+//                final var response = connector.create(requestBuilder.build(), ReportResponse.class);
+//                // FIXME
+//                System.out.println("Report create = " + response);
+//            }
+//            // update schema
+//            final var fields = new ArrayList<SchemaField>();
+//            {
+//                final var schemaField = new SchemaField("keyword", "キーワード", "キーワードスキーマ",
+//                    SchemaFieldType.Text, false, SchemaTextSettings.defaultValue());
+//                fields.add(schemaField);
+//            }
+//            {
+//                final var schemaField = new SchemaField("number", "数字", "数字スキーマ",
+//                    SchemaFieldType.Number, false, SchemaNumberSettings.defaultValue());
+//                fields.add(schemaField);
+//            }
+//            {
+//                final var schemaField = new SchemaField("dateTime", "日時", "日時スキーマ",
+//                    SchemaFieldType.DateTime, false, SchemaDatetimeSettings.defaultValue());
+//                fields.add(schemaField);
+//            }
+//            {
+//                final var schemaField = new SchemaField("check", "チェック", "チェックスキーマ",
+//                    SchemaFieldType.Check, false,
+//                    SchemaCheckSettings.defaultValue("チェック1", "チェック2", "チェック3"));
+//                fields.add(schemaField);
+//            }
+//            {
+//                final var schemaField = new SchemaField("radio", "ラジオ", "ラジオスキーマ",
+//                    SchemaFieldType.Radio, false,
+//                    SchemaRadioSettings.defaultValue("ラジオ1", "ラジオ2", "ラジオ3"));
+//                fields.add(schemaField);
+//            }
+//            {
+//                final var schemaField = new SchemaField("select", "セレクト", "セレクトスキーマ",
+//                    SchemaFieldType.Select, false,
+//                    SchemaSelectSettings.defaultValue("セレクト1", "セレクト2", "セレクト3"));
+//                fields.add(schemaField);
+//            }
+//            {
+//                final var request = SchemaUpdateRequest.builder()
+//                    .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                    .projectId(id)
+//                    .fields(fields)
+//                    .build();
+//                final var results = connector.update(request, SchemaField[].class);
+//                System.out.println("results = " + results);
+//            }
+
+//            // delete
+//            {
+//                final var request = ProjectDeleteRequest.builder()
+//                    .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                    .projectId(id)
+//                    .exterminate(true)
+//                    .build();
+//                connector.delete(request);
+//            }
 //        }
 //    }
 //
