@@ -149,7 +149,25 @@
 //                connector.delete(request);
 //            }
 //        }
-
+//
+//        @Test
+//        void search() throws Exception {
+//            final var searchRequest = ProjectSearchRequest.builder()
+//                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                .includes(String.format("name:%s", "sdk-project3"))
+//                .build();
+//            try {
+//                final var responses = connector.search(searchRequest, ProjectResponse.class);
+//                final var results = responses
+//                    .stream()
+//                    .findFirst()
+//                    .map(ProjectResponse::getId)
+//                    .stream().toList();
+//                System.out.println("results = " + results);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
         //        @Test
 //        void getProject() throws Exception {
 //            final var request = ProjectGetRequest.builder()

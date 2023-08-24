@@ -60,7 +60,7 @@ public class ProjectSearchRequest implements IRequest {
 
         public ProjectSearchRequest build() {
             final var path = PathConfig.ROOT + PathConfig.WORKSPACE + String.format("/%s", workspaceId) +
-                PathConfig.PROJECTS + "/" + PathConfig.SEARCH;
+                PathConfig.PROJECTS + PathConfig.SEARCH;
 
             final var params = new ArrayList<String>();
             if (Objects.nonNull(page)) {
