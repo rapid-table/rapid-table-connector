@@ -35,10 +35,12 @@ public class ReportCreateRequest implements IRequest {
         .registerModule(new JavaTimeModule());
 
     private final String path;
+    private final String query;
     private final String body;
 
-    ReportCreateRequest(final String path, final String body) {
+    ReportCreateRequest(final String path, final String query, final String body) {
         this.path = path;
+        this.query = query;
         this.body = body;
     }
 
@@ -47,7 +49,7 @@ public class ReportCreateRequest implements IRequest {
     }
 
     public String getQuery() {
-        return null;
+        return query;
     }
 
     public String getBody() {
@@ -61,6 +63,7 @@ public class ReportCreateRequest implements IRequest {
     public static class Builder {
         private String workspaceId = null;
         private String projectId = null;
+        private Boolean partialUpdate = false;
         private List<ReportRequestModel> reports = new ArrayList<>();
 
         public ReportCreateRequest build() throws JsonProcessingException, TooManyRequestException {
@@ -74,8 +77,14 @@ public class ReportCreateRequest implements IRequest {
                 throw new TooManyRequestException();
             }
 
+            final var params = new ArrayList<String>();
+            if (partialUpdate) {
+                params.add("partial-update=true");
+            }
+
+            final var query = String.join("&", params);
             final var body = mapper.writeValueAsString(reports);
-            return new ReportCreateRequest(path, body);
+            return new ReportCreateRequest(path, query, body);
         }
 
         public Builder workspaceId(final String workspaceId) {
@@ -90,6 +99,11 @@ public class ReportCreateRequest implements IRequest {
 
         public Builder append(final Map<String, Object> fields) {
             this.reports.add(new ReportRequestModel(fields));
+            return this;
+        }
+
+        public Builder partialUpdate(final Boolean partialUpdate) {
+            this.partialUpdate = partialUpdate;
             return this;
         }
 

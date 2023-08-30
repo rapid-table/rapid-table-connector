@@ -17,7 +17,7 @@ import { ReportRequestModel } from './report-request-model';
 
 export class ReportUpdateRequest implements IRequest {
 
-    constructor(private path: string, private body: string) {
+    constructor(private path: string, public query: { [key: string]: string | number }, private body: string) {
     }
 
     public getPath(): string {
@@ -25,7 +25,7 @@ export class ReportUpdateRequest implements IRequest {
     }
 
     public getQuery(): { [key: string]: string | number } {
-        return {};
+        return this.query;
     }
 
     public getBody(): string {
@@ -42,6 +42,7 @@ class Builder {
     private _workspaceId: string | null = null;
     private _projectId: string | null = null;
     private _reports: ReportRequestModel[] = [];
+    private _partialUpdate = false;
 
     public build(): ReportUpdateRequest {
         const path = PathConfig.ROOT + PathConfig.WORKSPACE + `/${this._workspaceId}` +
@@ -54,7 +55,12 @@ class Builder {
             throw new Error('IllegalArgumentException');
         }
 
-        return new ReportUpdateRequest(path, JSON.stringify(this._reports));
+        const params: { [key: string]: string | number } = {};
+        if (this._partialUpdate) {
+            params['partial-update'] = 'true';
+        }
+
+        return new ReportUpdateRequest(path, params, JSON.stringify(this._reports));
     }
 
     public workspaceId(workspaceId: string): Builder {
@@ -69,6 +75,11 @@ class Builder {
 
     public append(reportId: string, fields: { [key: string]: unknown }): Builder {
         this._reports.push(new ReportRequestModel(reportId, null, fields));
+        return this;
+    }
+
+    public partialUpdate(partialUpdate: boolean): Builder {
+        this._partialUpdate = partialUpdate;
         return this;
     }
 
