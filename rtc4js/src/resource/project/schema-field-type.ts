@@ -106,5 +106,5 @@ export enum SchemaFieldType {
     /**
      * 計算フィールド
      */
-    Calculate
+    Calc
 }

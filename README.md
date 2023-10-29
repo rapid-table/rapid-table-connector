@@ -8,7 +8,7 @@ RapidTableConnector provides an SDK that allows easy CRUD operations using the R
 <dependency>
     <groupId>com.rapid-table.sdk</groupId>
     <artifactId>rtc4j</artifactId>
-    <version>1.4.2</version>
+    <version>1.4.3</version>
 </dependency>
 ```
 
