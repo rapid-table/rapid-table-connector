@@ -8,6 +8,7 @@ export { DriveSearchRequest } from './resource/drive/drive-search-request';
 export { GetObjectResponse } from './resource/get-object-response';
 export { ProjectCountRequest } from './resource/project/project-count-request';
 export { ProjectGetRequest } from './resource/project/project-get-request';
+export { ProjectResponse } from './resource/project/project-response';
 export { ProjectSearchRequest } from './resource/project/project-search-request';
 export { SchemaField } from './resource/project/schema-field';
 export { SchemaFieldType } from './resource/project/schema-field-type';
