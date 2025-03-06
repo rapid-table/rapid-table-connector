@@ -108,7 +108,16 @@ public enum SchemaFieldType {
     /**
      * 計算フィールド
      */
-    Calc;
+    Calc,
 
+    /**
+     * キャンバス
+     */
+    Canvas,
+
+    /**
+     * Button
+     */
+    Button;
 }
 
