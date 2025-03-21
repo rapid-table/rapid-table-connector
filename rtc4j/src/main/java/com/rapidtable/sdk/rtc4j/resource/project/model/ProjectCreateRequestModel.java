@@ -30,6 +30,14 @@ public class ProjectCreateRequestModel {
      */
     private String description;
     /**
+     * Input theme for the project
+     */
+    private String theme;
+    /**
+     * Input cover image path
+     */
+    private String coverPath;
+    /**
      * Set the project locale.
      */
     private Locales locale;
@@ -47,6 +55,19 @@ public class ProjectCreateRequestModel {
         this.description = description;
     }
 
+    public ProjectCreateRequestModel(String name, String description, String theme, String coverPath) {
+        this.name = name;
+        this.description = description;
+        this.theme = theme;
+        this.coverPath = coverPath;
+    }
+
+    public ProjectCreateRequestModel(String name, String description, String coverPath) {
+        this.name = name;
+        this.description = description;
+        this.coverPath = coverPath;
+    }
+
     public ProjectCreateRequestModel(String name, String description, Locales locale) {
         this.name = name;
         this.description = description;
@@ -57,6 +78,23 @@ public class ProjectCreateRequestModel {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.locale = locale;
+    }
+
+    public ProjectCreateRequestModel(String id, String name, String description, String coverPath, Locales locale) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.coverPath = coverPath;
+        this.locale = locale;
+    }
+
+    public ProjectCreateRequestModel(String id, String name, String description, String theme, String coverPath, Locales locale) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.theme = theme;
+        this.coverPath = coverPath;
         this.locale = locale;
     }
 
@@ -82,6 +120,22 @@ public class ProjectCreateRequestModel {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
+
+    public String getCoverPath() {
+        return coverPath;
+    }
+
+    public void setCoverPath(String coverPath) {
+        this.coverPath = coverPath;
     }
 
     public Locales getLocale() {

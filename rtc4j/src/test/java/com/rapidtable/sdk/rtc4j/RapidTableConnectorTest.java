@@ -106,6 +106,17 @@
 //                e.printStackTrace();
 //            }
 //        }
+//
+//        @Test
+//        void put() throws Exception {
+//            final var request = DrivePutObjectRequest.builder()
+//                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                .parentPath(String.format("test/parent-path-name/%1$tY-%1$tm-%1$td_%1$tH%1$tM%1$tS", LocalDateTime.now()))
+//                .file(Path.of("out", "サンプル画像用.pptx"), "application/vnd.ms-powerpoint")
+//                .build();
+//            final var response = connector.putObject(request);
+//            System.out.println("Report putObject = " + response);
+//        }
 //    }
 //
 //    @Nested
@@ -144,6 +155,49 @@
 //                final var request = ProjectDeleteRequest.builder()
 //                    .workspaceId(RTC4J_TEST_WORKSPACE_ID)
 //                    .projectId(id)
+//                    .exterminate(true)
+//                    .build();
+//                connector.delete(request);
+//            }
+//        }
+//
+//
+//        @Test
+//        void crudIncludingCoverPaths() throws Exception, TooManyRequestException {
+//            String projectId;
+//            String coverPath;
+//            final var projectName = "sdk-project5";
+//            // generateId
+//            {
+//                final var request = ProjectGenerateIdRequest.builder()
+//                    .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                    .build();
+//                projectId = connector.generateId(request);
+//            }
+//            // create Cover
+//            {
+//                final var request = ProjectPutCoverRequest.builder()
+//                    .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                    .projectId(projectId)
+//                    .file(Path.of("out", "icon.png"), "image/png")
+//                    .build();
+//                coverPath = connector.putObject(request);
+//            }
+//            // create
+//            {
+//                final var model = new ProjectCreateRequestModel(projectId, projectName, "description", "#00FF001", coverPath, Locales.ja);
+//                final var requestBuilder = ProjectCreateRequest.builder()
+//                    .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                    .model(model);
+//                final var response = connector.create(requestBuilder.build(), ReportResponse.class);
+//                // FIXME
+//                System.out.println("Report create = " + response);
+//            }
+//            // delete
+//            {
+//                final var request = ProjectDeleteRequest.builder()
+//                    .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                    .projectId(projectId)
 //                    .exterminate(true)
 //                    .build();
 //                connector.delete(request);

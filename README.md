@@ -115,6 +115,17 @@ final var request = SchemaGetRequest.builder()
 final var response = connector.get(request, SchemaField[].class);
 ```
 
+### Projects - Put the cover image
+> Upload a cover image for your project.
+```java
+final var request = ProjectPutCoverRequest.builder()
+    .workspaceId("EXAMPLE WORKSPACE_ID")
+    .projectId("EXAMPLE PROJECT_ID")
+    .file(Path.of("currentPath", "example.png"), "image/png")
+    .build();
+final var coverPath = connector.putObject(request);
+```
+
 ---
 
 ### Projects - Search reports

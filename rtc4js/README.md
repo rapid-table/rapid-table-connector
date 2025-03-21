@@ -98,6 +98,17 @@ const request = SchemaGetRequest.builder()
 const results = await connector.get<SchemaField[]>(request);
 ```
 
+### Projects - Put the cover image
+> Upload a cover image for your project.
+```java
+const request = ProjectPutCoverRequest.builder()
+    .workspaceId("EXAMPLE WORKSPACE_ID")
+    .projectId("EXAMPLE PROJECT_ID")
+    .file(Path.of("currentPath", "example.png"), "image/png")
+    .build();
+const coverPath = await connector.putObject(request);
+```
+
 ### Projects - Search reports
 > Search reports for a specific project in this any workspace.
 ```js

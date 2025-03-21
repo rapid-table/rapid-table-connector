@@ -26,6 +26,11 @@ import { ReportCreateRequest } from '../src/resource/report/report-create-reques
 import { ReportDeleteRequest } from '../src/resource/report/report-delete-request';
 import { ReportGenerateIdRequest } from '../src/resource/report/report-generate-id-request';
 import { ReportGetObjectRequest } from '../src/resource/report/report-get-object-request';
+import { ProjectGenerateIdRequest } from '../src/resource/project/project-generate-id-request';
+import { ProjectCreateRequest } from '../src/resource/project/project-create-request';
+import { ProjectRequestModel } from '../src/resource/project/project-request-model';
+import { ProjectResponse } from '../src/resource/project/project-response';
+import { ProjectPutCoverRequest } from '../src/resource/project/project-put-cover-request';
 import { SchemaGetRequest } from '../src/resource/project/schema-get-request';
 import { SchemaField } from '../src/resource/project/schema-field';
 import { ReportGetRequest } from '../src/resource/report/report-get-request';
@@ -46,22 +51,22 @@ import { DriveCountRequest } from '../src/resource/drive/drive-count-request';
 dotenv.config();
 
 const {
-    RTC4J_TEST_PROJECT_ID,
-    RTC4J_TEST_WORKSPACE_ID,
-    RTC4J_TEST_ACCESS_ID,
-    RTC4J_TEST_ENDPOINT,
-    RTC4J_TEST_REPORT_ID,
-    RTC4J_TEST_ACCESS_KEY,
-    RTC4J_TEST_OBJECT_ID
+  RTC4J_TEST_PROJECT_ID,
+  RTC4J_TEST_WORKSPACE_ID,
+  RTC4J_TEST_ACCESS_ID,
+  RTC4J_TEST_ENDPOINT,
+  RTC4J_TEST_REPORT_ID,
+  RTC4J_TEST_ACCESS_KEY,
+  RTC4J_TEST_OBJECT_ID,
 } = process.env;
 
 const connector = RapidTableConnector.builder()
-    .accessId(RTC4J_TEST_ACCESS_ID || '')
-    .accessKey(RTC4J_TEST_ACCESS_KEY || '')
-    .endpoint(RTC4J_TEST_ENDPOINT || '')
-    // !CAUTION! Debugging in the local environment.
-    .secure(false)
-    .build();
+  .accessId(RTC4J_TEST_ACCESS_ID || '')
+  .accessKey(RTC4J_TEST_ACCESS_KEY || '')
+  .endpoint(RTC4J_TEST_ENDPOINT || '')
+  // !CAUTION! Debugging in the local environment.
+  .secure(false)
+  .build();
 
 // //#region drive
 // test('drive search', async () => {
@@ -117,6 +122,46 @@ const connector = RapidTableConnector.builder()
 // //#endregion
 
 // //#region project
+
+// test('create project', async () => {
+//   let projectId = '';
+//   let coverPath = '';
+//   const projectName = 'sdk-project11';
+//   {
+//     const request = ProjectGenerateIdRequest.builder()
+//       .workspaceId(RTC4J_TEST_WORKSPACE_ID || '')
+//       .build();
+//     projectId = await connector.generateId(request);
+//     console.log('Project generateId = ' + projectId);
+//   }
+//   {
+//     const buffer = await fs.readFileSync('out/icon.jpg');
+//     const request = ProjectPutCoverRequest.builder()
+//       .workspaceId(RTC4J_TEST_WORKSPACE_ID || '')
+//       .projectId(projectId)
+//       .append(buffer, 'icon.jpg')
+//       .build();
+//     coverPath = await connector.putObject(request);
+//   }
+//   {
+//     const project = new ProjectRequestModel(
+//       projectId,
+//       projectName,
+//       'make project with rtc4js',
+//       '#ddcc12',
+//       coverPath,
+//       'ja'
+//     );
+//     const request = ProjectCreateRequest.builder()
+//       .workspaceId(RTC4J_TEST_WORKSPACE_ID || '')
+//       .request(project)
+//       .build();
+
+//     const response = await connector.create(request, ProjectResponse.of);
+//     console.log('Report putObject = ' + response);
+//   }
+// });
+
 // test('get schema', async () => {
 //     const request = SchemaGetRequest.builder()
 //         .workspaceId(RTC4J_TEST_WORKSPACE_ID || '')
@@ -130,6 +175,7 @@ const connector = RapidTableConnector.builder()
 //         console.error(ex);
 //     }
 // });
+
 // //#endregion
 
 // //#region report
@@ -345,63 +391,67 @@ const connector = RapidTableConnector.builder()
 //#endregion
 
 function writeAsset(object: GetObjectResponse): void {
-    const rootDir = 'out';
-    if (!fs.existsSync(rootDir)) {
-        fs.mkdirSync(rootDir, { recursive: true });
-    }
+  const rootDir = 'out';
+  if (!fs.existsSync(rootDir)) {
+    fs.mkdirSync(rootDir, { recursive: true });
+  }
 
-    const assetPath = rootDir + '/' + object.fileName;
+  const assetPath = rootDir + '/' + object.fileName;
 
-    fs.writeFileSync(assetPath, object.data, 'binary');
+  fs.writeFileSync(assetPath, object.data, 'binary');
 }
 
 function makeDummyFields(): { [key: string]: unknown } {
-    const fields: { [key: string]: unknown } = {};
-    // Number
-    fields['bkdTVr1J51'] = 4;
-    // Text
-    fields['B97LjXOPr7'] = 'キーワード 3';
-    // Text
-    fields['AIxU8hOLfM'] = 'アルバートサウルス 3';
-    // Text
-    fields['WR-2A8cFUA'] = '<p><strong>アルバートサウルス</strong></p>';
-    // DateTime
-    fields['CssVTEBWnK'] = new Date(2023, 5, 10, 12, 34, 45);
-    // Date
-    fields['fgW1DnIC38'] = new Date(2023, 6, 11, 12, 34, 45);
-    // Time
-    fields['auuTZ-huou'] = new Date(2023, 5, 10, 13, 54, 2);
-    // Check
-    fields['PxetCrETIb'] = ['Check 2', 'Check 1'];
-    // Select
-    fields['fQNlK73ey3'] = 'Select 1';
-    // Radio
-    fields['6OY_pjJU9k'] = 'Radio 3';
-    // Check (Mode ref)
-    fields['ReIynbHDvl'] = ['36', '33', '50'];
-    // Select (Mode ref)
-    fields['RQdGg98STz'] = '41';
-    // Radio (Mode ref)
-    fields['IjoVtmbIeu'] = '44';
-    // Tags
-    fields['SC3K_VdiqA'] = ['U2beeXU9DeFI3T3mXn129', 'isEMBD-LG72_An2U0Njs5'];
-    // Phone number
-    fields['N8Eey-6PKW'] = '090-1234-7890';
-    // E-Mail
-    fields['bSqX1XakUG'] = 'mail@example.com';
-    // Zip code
-    fields['FPrXVrNog2'] = '123-4567';
-    // File path (image)
-    fields['BAJNu8NgYi'] = ['reports/qZle8BmYD8C5GS_94pUIF/WfNzIMYphSkgBiEzqz049/NT9QWWp39m7apQluSyalc/objects/5UKFdFAnzSuUTPv_m7DY8?v=1676013531349'];
-    // File path
-    fields['JX_ce48L7h'] = ['reports/qZle8BmYD8C5GS_94pUIF/WfNzIMYphSkgBiEzqz049/NT9QWWp39m7apQluSyalc/objects/1Yn3PBhL_dbdCrRgtYrPH?v=1674895052825'];
-    // User Ids
-    fields['X_ZZVIQKqz'] = ['dKpjWr7f95Uz4zla91-AH', 'eLpBldxfwl06AWoJPsGJM'];
-    // Projects
-    fields['0sTYzI2IPA'] = ['wz2Y1nlIujD6LBnVJPwrn'];
-    // Rate
-    fields['Tl4IGjgYFv'] = 5;
-    // Url
-    fields['zZiNQEjJ5F'] = 'https://example.com';
-    return fields;
+  const fields: { [key: string]: unknown } = {};
+  // Number
+  fields['bkdTVr1J51'] = 4;
+  // Text
+  fields['B97LjXOPr7'] = 'キーワード 3';
+  // Text
+  fields['AIxU8hOLfM'] = 'アルバートサウルス 3';
+  // Text
+  fields['WR-2A8cFUA'] = '<p><strong>アルバートサウルス</strong></p>';
+  // DateTime
+  fields['CssVTEBWnK'] = new Date(2023, 5, 10, 12, 34, 45);
+  // Date
+  fields['fgW1DnIC38'] = new Date(2023, 6, 11, 12, 34, 45);
+  // Time
+  fields['auuTZ-huou'] = new Date(2023, 5, 10, 13, 54, 2);
+  // Check
+  fields['PxetCrETIb'] = ['Check 2', 'Check 1'];
+  // Select
+  fields['fQNlK73ey3'] = 'Select 1';
+  // Radio
+  fields['6OY_pjJU9k'] = 'Radio 3';
+  // Check (Mode ref)
+  fields['ReIynbHDvl'] = ['36', '33', '50'];
+  // Select (Mode ref)
+  fields['RQdGg98STz'] = '41';
+  // Radio (Mode ref)
+  fields['IjoVtmbIeu'] = '44';
+  // Tags
+  fields['SC3K_VdiqA'] = ['U2beeXU9DeFI3T3mXn129', 'isEMBD-LG72_An2U0Njs5'];
+  // Phone number
+  fields['N8Eey-6PKW'] = '090-1234-7890';
+  // E-Mail
+  fields['bSqX1XakUG'] = 'mail@example.com';
+  // Zip code
+  fields['FPrXVrNog2'] = '123-4567';
+  // File path (image)
+  fields['BAJNu8NgYi'] = [
+    'reports/qZle8BmYD8C5GS_94pUIF/WfNzIMYphSkgBiEzqz049/NT9QWWp39m7apQluSyalc/objects/5UKFdFAnzSuUTPv_m7DY8?v=1676013531349',
+  ];
+  // File path
+  fields['JX_ce48L7h'] = [
+    'reports/qZle8BmYD8C5GS_94pUIF/WfNzIMYphSkgBiEzqz049/NT9QWWp39m7apQluSyalc/objects/1Yn3PBhL_dbdCrRgtYrPH?v=1674895052825',
+  ];
+  // User Ids
+  fields['X_ZZVIQKqz'] = ['dKpjWr7f95Uz4zla91-AH', 'eLpBldxfwl06AWoJPsGJM'];
+  // Projects
+  fields['0sTYzI2IPA'] = ['wz2Y1nlIujD6LBnVJPwrn'];
+  // Rate
+  fields['Tl4IGjgYFv'] = 5;
+  // Url
+  fields['zZiNQEjJ5F'] = 'https://example.com';
+  return fields;
 }
