@@ -9,6 +9,7 @@ export { DriveSearchRequest } from './resource/drive/drive-search-request';
 export { GetObjectResponse } from './resource/get-object-response';
 export { ProjectCountRequest } from './resource/project/project-count-request';
 export { ProjectCreateRequest } from './resource/project/project-create-request';
+export { ProjectExportPackageRequest } from './resource/project/project-export-package-request';
 export { ProjectGenerateIdRequest } from './resource/project/project-generate-id-request';
 export { ProjectGetRequest } from './resource/project/project-get-request';
 export { ProjectImportPackageRequest } from './resource/project/project-import-package-request';

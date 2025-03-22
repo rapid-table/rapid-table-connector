@@ -87,6 +87,9 @@ try {
 ### Drive - Put object
 > Upload an object to a workspace drive.
 ```js
+import * as fs from 'fs';
+import { DrivePutObjectRequest } from 'rtc4js';
+
 const buffer = await fs.readFileSync('example.jpg');
 const request = DrivePutObjectRequest.builder()
     .workspaceId('RTC4J_TEST_WORKSPACE_ID')
@@ -111,6 +114,8 @@ const results = await connector.get<SchemaField[]>(request);
 ### Projects - Put the cover image
 > Upload a cover image for your project.
 ```js
+import { ProjectPutCoverRequest } from 'rtc4js';
+
 const buffer = await fs.readFileSync('example.jpg');
 const request = ProjectPutCoverRequest.builder()
     .workspaceId("EXAMPLE WORKSPACE_ID")
@@ -355,6 +360,40 @@ const request = ReportAggregateValueRequest.builder()
     .fieldId("EXAMPLE_TARGET_FIELD_ID")
     .build();
 const results = await connector.bulkGet(request, AggregateValueResponse.of);
+```
+
+### Projects - Import package
+> This API uses the package import feature to import reports in bulk (import is in ZIP file format).
+```js
+import * as fs from 'fs';
+import { ProjectImportPackageRequest } from 'rtc4js';
+
+const buffer = await fs.readFileSync('out/package.zip');
+const request = ProjectImportPackageRequest.builder()
+    .workspaceId('RTC4J_TEST_WORKSPACE_ID')
+    .projectId('RTC4J_TEST_PROJECT_ID')
+    .append(buffer)
+    .build();
+const response = await connector.importPackage(request);
+```
+
+### Projects - Export package
+> This API uses the package export feature to export reports in bulk.
+```js
+import * as fs from 'fs';
+import { ProjectExportPackageRequest } from 'rtc4js';
+
+const request = ProjectExportPackageRequest.builder()
+    .workspaceId('RTC4J_TEST_WORKSPACE_ID')
+    .projectId('RTC4J_TEST_PROJECT_ID')
+    .gte("fieldId", "specific value")
+    .build();
+try {
+    const object = await connector.getObject(request);
+    fs.writeFileSync(object.fileName, object.data, 'binary');
+} catch (ex) {
+    console.error(ex);
+}
 ```
 
 ### Sample code for report registration

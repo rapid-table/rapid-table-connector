@@ -14,7 +14,7 @@ plugins {
 }
 
 group 'com.rapid-table.sdk'
-version '1.4.4'
+version '1.5.0'
 
 sourceCompatibility = '17'
 

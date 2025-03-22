@@ -33,6 +33,7 @@ import { ProjectRequestModel } from '../src/resource/project/project-request-mod
 import { ProjectResponse } from '../src/resource/project/project-response';
 import { ProjectPutCoverRequest } from '../src/resource/project/project-put-cover-request';
 import { ProjectImportPackageRequest } from '../src/resource/project/project-import-package-request';
+import { ProjectExportPackageRequest } from '../src/resource/project/project-export-package-request';
 import { SchemaGetRequest } from '../src/resource/project/schema-get-request';
 import { SchemaField } from '../src/resource/project/schema-field';
 import { ReportGetRequest } from '../src/resource/report/report-get-request';
@@ -365,6 +366,20 @@ const connector = RapidTableConnector.builder()
 
 //   const response = await connector.importPackage(request);
 //   expect(response.length).toBe(0);
+// });
+
+// test('project export package', async () => {
+//       const request = ProjectExportPackageRequest.builder()
+//         .workspaceId(RTC4J_TEST_WORKSPACE_ID || '')
+//         .projectId('ZoLKw9y0v9i0xJHaiCJ30')
+//         .gte("bIkJ1rPxPf", "3")
+//         .build();
+//     try {
+//         const asset = await connector.getObject(request);
+//         writeAsset(asset);
+//     } catch (ex) {
+//         console.error(ex);
+//     }
 // });
 
 // test('report delete', async () => {

@@ -392,6 +392,32 @@
 //                fail(e);
 //            }
 //        }
+//
+//        @Test
+//        void exportPackage() throws Exception {
+//            final var metadataRequest = ProjectExportPackageRequest.builder()
+//                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                .projectId("ZoLKw9y0v9i0xJHaiCJ30")
+//                .page(0)
+//                .size(15)
+//                .gte("bIkJ1rPxPf", "3")
+//                .build();
+//            final var object = connector.getObject(metadataRequest);
+//            System.out.println("object.getContentType() = " + object.getContentType());
+//            System.out.println("object.getContentLength()() = " + object.getContentLength());
+//
+//            // download
+//            try (final var inputStream = object.getData();
+//                 final var outputStream = new FileOutputStream(Path.of("out", object.getFileName()).toFile())) {
+//                byte[] buffer = new byte[1024];
+//                int bytesRead;
+//                while ((bytesRead = inputStream.read(buffer)) != -1) {
+//                    outputStream.write(buffer, 0, bytesRead);
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
 //    }
 //
 //    @Nested

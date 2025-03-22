@@ -8,13 +8,13 @@ RapidTableConnector provides an SDK that allows easy CRUD operations using the R
 <dependency>
     <groupId>com.rapid-table.sdk</groupId>
     <artifactId>rtc4j</artifactId>
-    <version>1.4.4</version>
+    <version>1.5.0</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-implementation 'com.rapid-table.sdk:rtc4j:1.4.4'
+implementation 'com.rapid-table.sdk:rtc4j:1.5.0'
 ```
 
 ### Javascript
@@ -85,7 +85,7 @@ try (final var inputStream = object.getData();
 > Upload an object to a workspace drive.
 ```java
 final var request = DrivePutObjectRequest.builder()
-    .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+    .workspaceId("EXAMPLE WORKSPACE_ID")
     .parentPath("root-path")
     .file(Path.of("source", "example.pptx"), "application/vnd.ms-powerpoint")
     .build();
@@ -300,6 +300,43 @@ final var request = ReportAggregateValueRequest.builder()
     .fieldId("EXAMPLE_TARGET_FIELD_ID")
     .build();
 final var response = connector.bulkGet(request, AggregateValueResponse.class);
+```
+
+### Projects - Import package
+> This API uses the package import feature to import reports in bulk (import is in ZIP file format).
+```java
+final var request = ProjectImportPackageRequest.builder()
+    .workspaceId("EXAMPLE WORKSPACE_ID")
+    .projectId("EXAMPLE PROJECT_ID")
+    .file(Path.of("out", "package.zip"))
+    .build();
+try {
+    final var responses = connector.importPackage(request);
+    assertEquals(0, responses.size());
+} catch (Exception e) {
+    e.printStackTrace();
+}
+```
+
+### Projects - Export package
+> This API uses the package export feature to export reports in bulk.
+```java
+final var request = ProjectExportPackageRequest.builder()
+    .workspaceId("EXAMPLE WORKSPACE_ID")
+    .projectId("EXAMPLE PROJECT_ID")
+    .gte("fieldId", "specific value")
+    .build();
+// download
+try (final var inputStream = object.getData();
+    final var outputStream = new FileOutputStream(Path.of("out", object.getFileName()).toFile())) {
+    byte[] buffer = new byte[1024];
+    int bytesRead;
+    while ((bytesRead = inputStream.read(buffer)) != -1) {
+        outputStream.write(buffer, 0, bytesRead);
+    }
+} catch (IOException e) {
+    e.printStackTrace();
+}
 ```
 
 ### Sample code for report registration
