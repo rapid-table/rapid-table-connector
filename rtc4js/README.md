@@ -84,13 +84,23 @@ try {
 }
 ```
 
+### Drive - Put object
+> Upload an object to a workspace drive.
+```js
+const buffer = await fs.readFileSync('example.jpg');
+const request = DrivePutObjectRequest.builder()
+    .workspaceId('RTC4J_TEST_WORKSPACE_ID')
+    .append(buffer, 'root/example.jpg')
+    .build();
+const path = await connector.putObject(request);
+```
 ---
 
 ## Usage - Projects Report
 
 ### Projects - Get schema
 > Gets schema information within a specific project in this any workspace.
-```java
+```js
 const request = SchemaGetRequest.builder()
     .workspaceId('RTC4J_TEST_WORKSPACE_ID')
     .projectId('RTC4J_TEST_PROJECT_ID')
@@ -100,11 +110,12 @@ const results = await connector.get<SchemaField[]>(request);
 
 ### Projects - Put the cover image
 > Upload a cover image for your project.
-```java
+```js
+const buffer = await fs.readFileSync('example.jpg');
 const request = ProjectPutCoverRequest.builder()
     .workspaceId("EXAMPLE WORKSPACE_ID")
     .projectId("EXAMPLE PROJECT_ID")
-    .file(Path.of("currentPath", "example.png"), "image/png")
+    .append(buffer, "image/png")
     .build();
 const coverPath = await connector.putObject(request);
 ```

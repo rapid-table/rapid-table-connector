@@ -3,6 +3,7 @@ export { DriveComponentType } from './resource/drive/drive-component-type';
 export { DriveCountRequest } from './resource/drive/drive-count-request';
 export { DriveGetMetadataRequest } from './resource/drive/drive-get-metadata-request';
 export { DriveGetObjectRequest } from './resource/drive/drive-get-object-request';
+export { DrivePutObjectRequest } from './resource/drive/drive-put-object-request';
 export { DriveResponse } from './resource/drive/drive-response';
 export { DriveSearchRequest } from './resource/drive/drive-search-request';
 export { GetObjectResponse } from './resource/get-object-response';

@@ -81,6 +81,18 @@ try (final var inputStream = object.getData();
 }
 ```
 
+### Drive - Put object
+> Upload an object to a workspace drive.
+```java
+final var request = DrivePutObjectRequest.builder()
+    .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+    .parentPath("root-path")
+    .file(Path.of("source", "example.pptx"), "application/vnd.ms-powerpoint")
+    .build();
+final var response = connector.putObject(request);
+System.out.println("Report putObject = " + response);
+```
+
 ---
 
 ## Usage - Projects Report

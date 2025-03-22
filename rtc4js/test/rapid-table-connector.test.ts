@@ -19,6 +19,7 @@ import { expect, jest, test } from '@jest/globals';
 import { RapidTableConnector } from '../src/rapid-table-connector';
 import { DriveGetMetadataRequest } from '../src/resource/drive/drive-get-metadata-request';
 import { DriveGetObjectRequest } from '../src/resource/drive/drive-get-object-request';
+import { DrivePutObjectRequest } from '../src/resource/drive/drive-put-object-request';
 import { DriveResponse } from '../src/resource/drive/drive-response';
 import { GetObjectResponse } from '../src/resource/get-object-response';
 import { ReportCountRequest } from '../src/resource/report/report-count-request';
@@ -118,6 +119,20 @@ const connector = RapidTableConnector.builder()
 //     } catch (ex) {
 //         console.error(ex);
 //     }
+// });
+
+// test('drive put', async () => {
+//   try {
+//     const buffer = await fs.readFileSync('out/icon.jpg');
+//     const request = DrivePutObjectRequest.builder()
+//       .workspaceId(RTC4J_TEST_WORKSPACE_ID || '')
+//       .append(buffer, 'root/example.jpg')
+//       .build();
+//     const path = await connector.putObject(request);
+//     console.log('path', path);
+//   } catch (ex) {
+//     console.error(ex);
+//   }
 // });
 // //#endregion
 
