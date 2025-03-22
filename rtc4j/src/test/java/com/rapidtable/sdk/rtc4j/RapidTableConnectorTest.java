@@ -14,7 +14,27 @@
 //package com.rapidtable.sdk.rtc4j;
 //
 //import com.rapidtable.sdk.rtc4j.exceptions.TooManyRequestException;
-//import com.rapidtable.sdk.rtc4j.resource.project.*;
+//import com.rapidtable.sdk.rtc4j.resource.drive.DriveComponentType;
+//import com.rapidtable.sdk.rtc4j.resource.drive.DriveCountRequest;
+//import com.rapidtable.sdk.rtc4j.resource.drive.DriveGetMetadataRequest;
+//import com.rapidtable.sdk.rtc4j.resource.drive.DriveGetObjectRequest;
+//import com.rapidtable.sdk.rtc4j.resource.drive.DrivePutObjectRequest;
+//import com.rapidtable.sdk.rtc4j.resource.drive.DriveResponse;
+//import com.rapidtable.sdk.rtc4j.resource.drive.DriveSearchRequest;
+//import com.rapidtable.sdk.rtc4j.resource.project.ProjectBulkGetRequest;
+//import com.rapidtable.sdk.rtc4j.resource.project.ProjectCreateRequest;
+//import com.rapidtable.sdk.rtc4j.resource.project.ProjectDeleteRequest;
+//import com.rapidtable.sdk.rtc4j.resource.project.ProjectExportPackageRequest;
+//import com.rapidtable.sdk.rtc4j.resource.project.ProjectGenerateIdRequest;
+//import com.rapidtable.sdk.rtc4j.resource.project.ProjectGetRequest;
+//import com.rapidtable.sdk.rtc4j.resource.project.ProjectImportPackageRequest;
+//import com.rapidtable.sdk.rtc4j.resource.project.ProjectPutCoverRequest;
+//import com.rapidtable.sdk.rtc4j.resource.project.ProjectResponse;
+//import com.rapidtable.sdk.rtc4j.resource.project.ProjectSearchRequest;
+//import com.rapidtable.sdk.rtc4j.resource.project.SchemaField;
+//import com.rapidtable.sdk.rtc4j.resource.project.SchemaFieldType;
+//import com.rapidtable.sdk.rtc4j.resource.project.SchemaGetRequest;
+//import com.rapidtable.sdk.rtc4j.resource.project.SchemaUpdateRequest;
 //import com.rapidtable.sdk.rtc4j.resource.project.model.Locales;
 //import com.rapidtable.sdk.rtc4j.resource.project.model.ProjectCreateRequestModel;
 //import com.rapidtable.sdk.rtc4j.resource.project.schema.datetime.SchemaDatetimeSettings;
@@ -380,7 +400,7 @@
 //        void search() throws Exception {
 //            final var request = ReportSearchRequest.builder()
 //                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
-//                .projectId("XJ-sbocpVOsKlmaUyzJfT")
+//                .projectId("ZoLKw9y0v9i0xJHaiCJ30")
 //                .page(0)
 //                .size(15)
 //                .build();
@@ -393,21 +413,23 @@
 //        void buildSearch() throws Exception, TooManyRequestException {
 //            final var request = ReportBulkSearchRequest.builder()
 //                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
-//                .ids("XJ-sbocpVOsKlmaUyzJfT", "cobukD_dO41NcU3wOBKwY")
-//                .query("金融２２")
+//                .projectIds("ZoLKw9y0v9i0xJHaiCJ30", "6fXWKAjBoV2bqq80xZAlk")
+//                .gt("bIkJ1rPxPf", "3")
 //                .page(0)
 //                .size(100)
 //                .build();
 //            final var response = connector.search(request, ReportResponse.class);
-//            // FIXME
-//            System.out.println("Report search = " + response.size());
+//            for (final var reportResponse : response) {
+//                System.out.println("Report search = " + reportResponse.getField("bIkJ1rPxPf", String.class));
+//            }
 //        }
 //
 //        @Test
 //        void count() throws Exception {
 //            final var request = ReportCountRequest.builder()
 //                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
-//                .projectId(RTC4J_TEST_PROJECT_ID)
+//                .projectId("ZoLKw9y0v9i0xJHaiCJ30")
+//                .gt("bIkJ1rPxPf", "3")
 //                .build();
 //            final var response = connector.count(request);
 //            // FIXME
@@ -418,8 +440,8 @@
 //        void buildCount() throws Exception, TooManyRequestException {
 //            final var request = ReportBulkCountRequest.builder()
 //                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
-//                .ids("XJ-sbocpVOsKlmaUyzJfT", "cobukD_dO41NcU3wOBKwY")
-//                .query("金融２２")
+//                .projectIds("ZoLKw9y0v9i0xJHaiCJ30", "6fXWKAjBoV2bqq80xZAlk")
+//                .gt("bIkJ1rPxPf", "3")
 //                .build();
 //            final var response = connector.count(request);
 //            // FIXME
@@ -581,12 +603,15 @@
 //        void aggregate() throws Exception, TooManyRequestException {
 //            final var request = ReportAggregateValueRequest.builder()
 //                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
-//                .projectIds("cobukD_dO41NcU3wOBKwY", "50Tbhd8aSfQN9_NgUuHGU")
-//                .fieldId("Hn0Y4fj4G5")
+//                .projectIds("ZoLKw9y0v9i0xJHaiCJ30", "6fXWKAjBoV2bqq80xZAlk")
+//                .fieldId("bIkJ1rPxPf")
+//                .gt("bIkJ1rPxPf", "3")
 //                .build();
 //            final var response = connector.bulkGet(request, AggregateValueResponse.class);
 //            // FIXME
-//            System.out.println("Report aggregate = " + response);
+//            for (final var aggregateValueResponse : response) {
+//                System.out.println(aggregateValueResponse.getValue() + " = " + aggregateValueResponse.getCount());
+//            }
 //        }
 //
 //        private Map<String, Object> makeDummyFields() {

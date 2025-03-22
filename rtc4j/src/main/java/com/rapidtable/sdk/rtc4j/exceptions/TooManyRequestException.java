@@ -13,5 +13,5 @@
 
 package com.rapidtable.sdk.rtc4j.exceptions;
 
-public class TooManyRequestException extends Throwable {
+public class TooManyRequestException extends Exception {
 }
