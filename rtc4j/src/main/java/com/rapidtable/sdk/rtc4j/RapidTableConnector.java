@@ -17,7 +17,14 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.rapidtable.sdk.rtc4j.resource.*;
+import com.rapidtable.sdk.rtc4j.resource.GetObjectResponse;
+import com.rapidtable.sdk.rtc4j.resource.IDeleteRequest;
+import com.rapidtable.sdk.rtc4j.resource.IGenerateIdRequest;
+import com.rapidtable.sdk.rtc4j.resource.IImportPackageRequest;
+import com.rapidtable.sdk.rtc4j.resource.IPutObjectRequest;
+import com.rapidtable.sdk.rtc4j.resource.IRequest;
+import com.rapidtable.sdk.rtc4j.resource.PathConfig;
+import com.rapidtable.sdk.rtc4j.resource.project.model.ImportFailedReport;
 
 import java.net.URI;
 import java.net.URLDecoder;
@@ -227,9 +234,39 @@ public class RapidTableConnector {
             }
             return response.body();
         } catch (Exception ee) {
-            ee.printStackTrace();
+            throw new Exception();
         }
-        return null;
+    }
+
+    public List<ImportFailedReport> importPackage(final IImportPackageRequest request) throws Exception {
+        if (!credentials.isPermitted()) {
+            this.credentials = permission();
+        }
+
+        if (Objects.isNull(request.getPath())) {
+            throw new IllegalArgumentException();
+        }
+
+        try {
+            final var httpRequest = HttpRequest.newBuilder()
+                .uri(new URI(schema, host, request.getPath(), request.getQuery(), null))
+                .POST(request.getPublisher())
+                .setHeader(AUTHORIZATION, credentials.token())
+                .setHeader(HTTP_CONTENT_TYPE_HEADER, request.getContentType())
+                .build();
+
+            final var response = client
+                .send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200) {
+                throw new Exception();
+            }
+            final var collectionType = mapper.getTypeFactory()
+                .constructCollectionType(List.class, ImportFailedReport.class);
+            return mapper.readValue(response.body(), collectionType);
+        } catch (Exception ee) {
+            throw new Exception();
+        }
     }
 
     public String generateId(final IGenerateIdRequest request) throws Exception {

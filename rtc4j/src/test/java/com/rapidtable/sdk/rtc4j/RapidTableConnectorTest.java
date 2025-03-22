@@ -23,12 +23,38 @@
 //import com.rapidtable.sdk.rtc4j.resource.project.schema.option.SchemaRadioSettings;
 //import com.rapidtable.sdk.rtc4j.resource.project.schema.option.SchemaSelectSettings;
 //import com.rapidtable.sdk.rtc4j.resource.project.schema.text.SchemaTextSettings;
+//import com.rapidtable.sdk.rtc4j.resource.report.AggregateValueResponse;
+//import com.rapidtable.sdk.rtc4j.resource.report.ReportAggregateValueRequest;
+//import com.rapidtable.sdk.rtc4j.resource.report.ReportBulkCountRequest;
+//import com.rapidtable.sdk.rtc4j.resource.report.ReportBulkGetRequest;
+//import com.rapidtable.sdk.rtc4j.resource.report.ReportBulkSearchRequest;
+//import com.rapidtable.sdk.rtc4j.resource.report.ReportCountRequest;
+//import com.rapidtable.sdk.rtc4j.resource.report.ReportCreateRequest;
+//import com.rapidtable.sdk.rtc4j.resource.report.ReportDeleteObjectRequest;
+//import com.rapidtable.sdk.rtc4j.resource.report.ReportDeleteRequest;
+//import com.rapidtable.sdk.rtc4j.resource.report.ReportGenerateIdRequest;
+//import com.rapidtable.sdk.rtc4j.resource.report.ReportGetObjectRequest;
+//import com.rapidtable.sdk.rtc4j.resource.report.ReportGetRequest;
+//import com.rapidtable.sdk.rtc4j.resource.report.ReportPutObjectRequest;
 //import com.rapidtable.sdk.rtc4j.resource.report.ReportResponse;
+//import com.rapidtable.sdk.rtc4j.resource.report.ReportSearchRequest;
+//import com.rapidtable.sdk.rtc4j.resource.report.ReportUpdateRequest;
 //import org.junit.jupiter.api.Nested;
 //import org.junit.jupiter.api.Test;
 //
+//import java.io.FileOutputStream;
+//import java.io.IOException;
 //import java.nio.file.Path;
+//import java.time.LocalDateTime;
 //import java.util.ArrayList;
+//import java.util.HashMap;
+//import java.util.List;
+//import java.util.Map;
+//
+//import static org.junit.jupiter.api.Assertions.assertEquals;
+//import static org.junit.jupiter.api.Assertions.assertNotNull;
+//import static org.junit.jupiter.api.Assertions.assertTrue;
+//import static org.junit.jupiter.api.Assertions.fail;
 //
 //class RapidTableConnectorTest {
 //    private static final String RTC4J_TEST_ACCESS_ID = System.getenv("RTC4J_TEST_ACCESS_ID");
@@ -53,7 +79,7 @@
 //            out.mkdir();
 //        }
 //    }
-
+//
 //    @Nested
 //    class Drive {
 //        @Test
@@ -222,7 +248,8 @@
 //                e.printStackTrace();
 //            }
 //        }
-        //        @Test
+//
+//        @Test
 //        void getProject() throws Exception {
 //            final var request = ProjectGetRequest.builder()
 //                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
@@ -253,7 +280,7 @@
 //            final var settings = response[0].getSettings();
 //            System.out.println("settings = " + settings);
 //        }
-
+//
 //        @Test
 //        void updateSchema() throws Exception, TooManyRequestException {
 //            String id;
@@ -318,7 +345,7 @@
 //                final var results = connector.update(request, SchemaField[].class);
 //                System.out.println("results = " + results);
 //            }
-
+//
 //            // delete
 //            {
 //                final var request = ProjectDeleteRequest.builder()
@@ -327,6 +354,22 @@
 //                    .exterminate(true)
 //                    .build();
 //                connector.delete(request);
+//            }
+//        }
+//
+//        @Test
+//        void importPackage() throws Exception {
+//            final var request = ProjectImportPackageRequest.builder()
+//                .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                .projectId("ZoLKw9y0v9i0xJHaiCJ30")
+//                .file(Path.of("out", "プロジェクト1.zip"))
+//                .forceUseReportId(true)
+//                .build();
+//            try {
+//                final var responses = connector.importPackage(request);
+//                assertEquals(0, responses.size());
+//            } catch (Exception e) {
+//                fail(e);
 //            }
 //        }
 //    }

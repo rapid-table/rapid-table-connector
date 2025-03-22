@@ -15,8 +15,10 @@ import axios, { AxiosHeaders, AxiosInstance } from 'axios';
 import { IDeleteRequest } from './resource/delete-request.interface';
 import { IGenerateIdRequest } from './resource/generate-id-request.interface';
 import { GetObjectResponse } from './resource/get-object-response';
+import { IImportPackageRequest } from './resource/import-package-request.interface';
 import { PathConfig } from './resource/path-config';
 import { IPutObjectRequest } from './resource/put-object-request.interface';
+import { ImportFailedReport } from './resource/report/import-failed-report';
 import { IRequest } from './resource/request.interface';
 
 const AUTHORIZATION_HEADER = 'authorization';
@@ -266,6 +268,26 @@ export class RapidTableConnector {
         headers.set(AUTHORIZATION_HEADER, this.credentials.token);
         headers.set(HTTP_CONTENT_TYPE_HEADER, 'multipart/form-data');
         const res = await this.client.put(request.getPath(), request.getFormData(), { headers });
+        if (res.status !== 200) {
+            return Promise.reject(`get failed: ${res.status}`);
+        }
+        return res.data;
+    }
+
+    public async importPackage(request: IImportPackageRequest): Promise<ImportFailedReport[]> {
+        if (!this.credentials.isPermitted()) {
+            this.credentials = await this.permission();
+        }
+
+        if (!request.getPath() || !request.getFormData()) {
+            return Promise.reject(`IllegalArgumentException`);
+        }
+        const params = request.getQuery();
+
+        const headers = new AxiosHeaders();
+        headers.set(AUTHORIZATION_HEADER, this.credentials.token);
+        headers.set(HTTP_CONTENT_TYPE_HEADER, 'multipart/form-data');
+        const res = await this.client.post(request.getPath(), request.getFormData(), { headers, params });
         if (res.status !== 200) {
             return Promise.reject(`get failed: ${res.status}`);
         }

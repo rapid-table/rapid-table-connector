@@ -32,6 +32,7 @@ import { ProjectCreateRequest } from '../src/resource/project/project-create-req
 import { ProjectRequestModel } from '../src/resource/project/project-request-model';
 import { ProjectResponse } from '../src/resource/project/project-response';
 import { ProjectPutCoverRequest } from '../src/resource/project/project-put-cover-request';
+import { ProjectImportPackageRequest } from '../src/resource/project/project-import-package-request';
 import { SchemaGetRequest } from '../src/resource/project/schema-get-request';
 import { SchemaField } from '../src/resource/project/schema-field';
 import { ReportGetRequest } from '../src/resource/report/report-get-request';
@@ -350,6 +351,20 @@ const connector = RapidTableConnector.builder()
 //     const updated = await connector.update(requestBuilder, ReportResponse.of);
 //     // FIXME
 //     console.log('Report update = ' + updated);
+// });
+
+// test('project import package', async () => {
+//   const buffer = await fs.readFileSync('out/プロジェクト1.zip');
+//   const request = ProjectImportPackageRequest.builder()
+//     .workspaceId(RTC4J_TEST_WORKSPACE_ID || '')
+//     .projectId('ZoLKw9y0v9i0xJHaiCJ30')
+//     .forceUseReportId(true)
+//     // .projectId(RTC4J_TEST_PROJECT_ID || '')
+//     .append(buffer)
+//     .build();
+
+//   const response = await connector.importPackage(request);
+//   expect(response.length).toBe(0);
 // });
 
 // test('report delete', async () => {
