@@ -26,6 +26,7 @@
 //import com.rapidtable.sdk.rtc4j.resource.project.ProjectDeleteRequest;
 //import com.rapidtable.sdk.rtc4j.resource.project.ProjectExportPackageRequest;
 //import com.rapidtable.sdk.rtc4j.resource.project.ProjectGenerateIdRequest;
+//import com.rapidtable.sdk.rtc4j.resource.project.ProjectGetCoverRequest;
 //import com.rapidtable.sdk.rtc4j.resource.project.ProjectGetRequest;
 //import com.rapidtable.sdk.rtc4j.resource.project.ProjectImportPackageRequest;
 //import com.rapidtable.sdk.rtc4j.resource.project.ProjectPutCoverRequest;
@@ -212,7 +213,7 @@
 //        void crudIncludingCoverPaths() throws Exception, TooManyRequestException {
 //            String projectId;
 //            String coverPath;
-//            final var projectName = "sdk-project5";
+//            final var projectName = "sdk-project22";
 //            // generateId
 //            {
 //                final var request = ProjectGenerateIdRequest.builder()
@@ -228,6 +229,27 @@
 //                    .file(Path.of("out", "icon.png"), "image/png")
 //                    .build();
 //                coverPath = connector.putObject(request);
+//            }
+//            // get Cover
+//            {
+//                final var objectId = coverPath.substring(coverPath.lastIndexOf("/") + 1);
+//                final var request = ProjectGetCoverRequest.builder()
+//                    .workspaceId(RTC4J_TEST_WORKSPACE_ID)
+//                    .projectId(projectId)
+//                    .objectId(objectId)
+//                    .build();
+//                final var object = connector.getObject(request);
+//                // download
+//                try (final var inputStream = object.getData();
+//                     final var outputStream = new FileOutputStream(Path.of("out", "cover.png").toFile())) {
+//                    byte[] buffer = new byte[1024];
+//                    int bytesRead;
+//                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+//                        outputStream.write(buffer, 0, bytesRead);
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
 //            }
 //            // create
 //            {

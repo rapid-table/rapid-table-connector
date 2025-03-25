@@ -8,13 +8,13 @@ RapidTableConnector provides an SDK that allows easy CRUD operations using the R
 <dependency>
     <groupId>com.rapid-table.sdk</groupId>
     <artifactId>rtc4j</artifactId>
-    <version>1.5.0</version>
+    <version>1.5.1</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-implementation 'com.rapid-table.sdk:rtc4j:1.5.0'
+implementation 'com.rapid-table.sdk:rtc4j:1.5.1'
 ```
 
 ### Javascript
@@ -136,6 +136,27 @@ final var request = ProjectPutCoverRequest.builder()
     .file(Path.of("currentPath", "example.png"), "image/png")
     .build();
 final var coverPath = connector.putObject(request);
+```
+
+---
+
+### Projects - Get the cover image
+> Download a cover image for your project.
+```java
+final var request = ProjectGetCoverRequest.builder()
+    .workspaceId("EXAMPLE WORKSPACE_ID")
+    .projectId("EXAMPLE PROJECT_ID")
+    .objectId("EXAMPLE OBJECT_ID")
+    .build();
+final var object = connector.getObject(request);
+try (final var inputStream = object.getData();
+        final var outputStream = new FileOutputStream(Path.of("out", object.getFileName()).toFile())) {
+    byte[] buffer = new byte[1024];
+    int bytesRead;
+    while ((bytesRead = inputStream.read(buffer)) != -1) {
+        outputStream.write(buffer, 0, bytesRead);
+    }
+}
 ```
 
 ---
