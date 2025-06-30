@@ -237,6 +237,37 @@ try {
 }
 ```
 
+### Projects - Get Report Canvas Object
+> Gets an object of canvas fields data in a specific report in this any workspace.
+```js
+import * as fs from 'fs';
+import { ReportGetRequest, ReportResponse, ReportGetCanvasObjectRequest } from 'rtc4js';
+
+const request = ReportGetRequest.builder()
+    .workspaceId('RTC4J_TEST_WORKSPACE_ID')
+    .projectId('RTC4J_TEST_PROJECT_ID')
+    .reportId('RTC4J_TEST_REPORT_ID')
+    .build();
+try {
+    const report = await connector.get(request, ReportResponse.of);
+    console.log('report', report);
+    const testCanvasFieldId = 'BAJNu8NgYi';
+    const path = report.getFieldAsString(testCanvasFieldId);
+
+    if (path) {
+        // download
+        const objectRequest = ReportGetCanvasObjectRequest.builder()
+            .target(path)
+            .build();
+        const object = await connector.getObject(objectRequest);
+        console.log('data', object.fileName, object.contentType, object.contentLength);
+        fs.writeFileSync(object.fileName, object.data, 'binary');
+    }
+} catch (ex) {
+    console.error(ex);
+}
+```
+
 ### Projects - Generate Report ID
 > This is an endpoint that generates IDs for reports in advance.
 ```js

@@ -8,13 +8,13 @@ RapidTableConnector provides an SDK that allows easy CRUD operations using the R
 <dependency>
     <groupId>com.rapid-table.sdk</groupId>
     <artifactId>rtc4j</artifactId>
-    <version>1.5.1</version>
+    <version>1.6.0</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-implementation 'com.rapid-table.sdk:rtc4j:1.5.1'
+implementation 'com.rapid-table.sdk:rtc4j:1.6.0'
 ```
 
 ### Javascript
@@ -245,6 +245,36 @@ System.out.println("fieldValue = " + fieldValue);
 
 final var objectRequest = ReportGetObjectRequest.builder()
     .target(fieldValue.get(0))
+    .build();
+
+final var object = connector.getObject(objectRequest);
+try (final var inputStream = object.getData();
+        final var outputStream = new FileOutputStream(Path.of("out", object.getFileName()).toFile())) {
+    byte[] buffer = new byte[1024];
+    int bytesRead;
+    while ((bytesRead = inputStream.read(buffer)) != -1) {
+        outputStream.write(buffer, 0, bytesRead);
+    }
+}
+```
+
+### Projects - Get Report Canvas Object
+> Gets an object of canvas fields data in a specific report in this any workspace.
+```java
+final var request = ReportGetRequest.builder()
+    .workspaceId("EXAMPLE WORKSPACE_ID")
+    .projectId("EXAMPLE PROJECT_ID")
+    .reportId("EXAMPLE REPORT_ID")
+    .build();
+final var response = connector.get(request, ReportResponse.class);
+
+final var testCanvasFieldId = "exampleCanvasFieldId";
+final var fieldValue = response.getField(testCanvasFieldId, String.class);
+assertNotNull(fieldValue);
+System.out.println("fieldValue = " + fieldValue);
+
+final var objectRequest = ReportGetCanvasObjectRequest.builder()
+    .target(fieldValue)
     .build();
 
 final var object = connector.getObject(objectRequest);

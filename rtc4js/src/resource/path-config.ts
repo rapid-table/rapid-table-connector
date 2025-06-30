@@ -20,11 +20,13 @@ export class PathConfig {
     public static REPORTS: string = '/reports';
     public static SCHEMA: string = '/schema';
     public static OBJECTS: string = '/objects';
+    public static CANVAS: string = '/canvas';
     public static METADATA: string = '/metadata';
     public static SEARCH: string = '/search';
     public static COUNT: string = '/count';
     public static AGGREGATE: string = '/aggs';
 
     public static REPORT_OBJECT_PATH_PATTERN = new RegExp(/^reports\/(?<wid>[a-z0-9_-]+?)\/(?<pid>[a-z0-9_-]+?)\/(?<rid>[a-z0-9_-]+?)\/objects\/(?<oid>[a-z0-9_-]+)/i);
+    public static REPORT_CANVAS_OBJECT_PATH_PATTERN = new RegExp(/^reports\/(?<wid>[a-z0-9_-]+?)\/(?<pid>[a-z0-9_-]+?)\/(?<rid>[a-z0-9_-]+?)\/canvas\/(?<fid>[a-z0-9_-]+)/i);
     public static DRIVE_OBJECT_PATH_PATTERN = new RegExp(/^drives\/(?<wid>[a-z0-9_-]+?)\/objects\/(?<oid>[a-z0-9_-]+)/i);
 }

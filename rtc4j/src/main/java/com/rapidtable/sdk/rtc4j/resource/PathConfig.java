@@ -28,6 +28,7 @@ public class PathConfig {
     public static final String REPORTS = "/reports";
     public static final String SCHEMA = "/schema";
     public static final String OBJECTS = "/objects";
+    public static final String CANVAS = "/canvas";
     public static final String METADATA = "/metadata";
     public static final String SEARCH = "/search";
     public static final String COUNT = "/count";
@@ -37,6 +38,10 @@ public class PathConfig {
 
     public static final Pattern REPORT_OBJECT_PATH_PATTERN = Pattern
         .compile("^reports/(?<wid>[0-9a-z_-]+)/(?<pid>[0-9a-z_-]+)/(?<rid>[0-9a-z_-]+)/objects/(?<oid>[0-9a-z_-]+).*",
+            CASE_INSENSITIVE);
+
+    public static final Pattern REPORT_CANVAS_OBJECT_PATH_PATTERN = Pattern
+        .compile("^reports/(?<wid>[0-9a-z_-]+)/(?<pid>[0-9a-z_-]+)/(?<rid>[0-9a-z_-]+)/canvas/(?<fid>[0-9a-z_-]+).*",
             CASE_INSENSITIVE);
 
     public static final Pattern DRIVE_OBJECT_PATH_PATTERN = Pattern
