@@ -11,20 +11,19 @@ plugins {
     id 'java-library'
     id 'signing'
     id 'maven-publish'
+    id("cl.franciscosolis.sonatype-central-upload") version "1.0.3"
 }
 
 group 'com.rapid-table.sdk'
 version '1.6.0'
 
-sourceCompatibility = '17'
+sourceCompatibility = '21'
 
 repositories {
-    // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
 
 dependencies {
-
     // Use JUnit Jupiter for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
 
@@ -37,10 +36,8 @@ dependencies {
 }
 
 tasks.named('test') {
-    // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
-
 
 java {
     withJavadocJar()
@@ -50,52 +47,59 @@ java {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = 'rtc4j'
             from components.java
             pom {
-                name = 'rtc4j'
-                description = 'RapidTableConnector provides an SDK that allows easy CRUD operations using the Rest API provided by RapidTable.'
-                url = 'https://rapid-table.com'
+                name.set(project.name)
+                description.set("RapidTableConnector provides an SDK that allows easy CRUD operations using the Rest API provided by RapidTable.")
+                url.set("https://github.com/rapid-table/rapid-table-connector")
                 licenses {
                     license {
-                        name = 'The Apache License, Version 2.0'
-                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        name.set("Apache License 2.0")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0")
+                        distribution.set("repo")
                     }
                 }
                 developers {
                     developer {
-                        id = 'RapidTableEijiHirakawa'
-                        name = 'Eiji Hirakawa'
-                        email = 'eiji.hirakawa@rapid-table.com'
+                        id.set("e-hirakawa")
+                        name.set("Eiji Hirakawa")
+                        email.set("eiji.hirakawa@rapid-table.com")
                     }
                 }
                 scm {
-                    connection = 'git@github.com:rapid-table/rapid-table-connector.git'
-                    developerConnection = 'git@github.com:rapid-table/rapid-table-connector.git'
-                    url = 'https://github.com/rapid-table/rapid-table-connector/tree/main'
+                    url.set("https://github.com/rapid-table/rapid-table-connector")
                 }
-            }
-        }
-    }
-    repositories {
-        maven {
-            def releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2"
-            def snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots"
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-            credentials {
-                username = "${sonatypeUsername}"
-                password = "${sonatypePassword}"
             }
         }
     }
 }
 
+sonatypeCentralUpload {
+    username = System.getenv("SONATYPE_CENTRAL_USERNAME")
+    password = System.getenv("SONATYPE_CENTRAL_PASSWORD")
+
+    archives = files(
+            tasks.named("jar"),
+            tasks.named("sourcesJar"),
+            tasks.named("javadocJar")
+    )
+    def pomTask = tasks.named("generatePomFileForMavenJavaPublication").get()
+    pom = pomTask.outputs.files.singleFile
+
+    signingKey = System.getenv("PGP_SIGNING_KEY")
+    signingKeyPassphrase = System.getenv("PGP_SIGNING_KEY_PASSPHRASE")
+}
+
 signing {
+    useInMemoryPgpKeys(
+            System.getenv("PGP_SIGNING_KEY"),
+            System.getenv("PGP_SIGNING_KEY_PASSPHRASE")
+    )
     sign publishing.publications.mavenJava
 }
 
 javadoc {
-    if (JavaVersion.current().isJava9Compatible()) {    
+    if (JavaVersion.current().isJava9Compatible()) {
         options.addBooleanOption('html5', true)
     }
 }
