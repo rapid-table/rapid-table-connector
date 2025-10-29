@@ -294,7 +294,7 @@ export class RapidTableConnector {
         return res.data;
     }
 
-    private async permission(): Promise<Credentials> {
+    public async permission(): Promise<Credentials> {
         const request = {
             email: this.accessId,
             key: this.accessKey
@@ -356,7 +356,7 @@ class RapidTableConnectorBuilder {
     }
 }
 
-class Credentials {
+export class Credentials {
     constructor(
         public token: string | null,
         public approvedAt: number,
