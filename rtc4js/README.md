@@ -139,6 +139,21 @@ const request = ReportSearchRequest.builder()
 const results = await connector.search(request, ReportResponse.of);
 console.log('results', results);
 ```
+If you want to obtain metadata (the report creation date and update date), set the metadata flag in the `ReportSearchRequest` to true and receive the data in the `ReportWithMetadataResponse`.  
+(Available from RapidTable version 1.6.25)
+```js
+import { ReportSearchRequest, ReportWithMetadataResponse } from 'rtc4js';
+
+const request = ReportSearchRequest.builder()
+    .workspaceId('RTC4J_TEST_WORKSPACE_ID')
+    .projectId('RTC4J_TEST_PROJECT_ID')
+    .page(0)
+    .size(15)
+    .metadata(true)
+    .build();
+const results = await connector.search(request, ReportWithMetadataResponse.of);
+console.log('results', results);
+```
 
 ### Projects - Search reports (Bulk operation)
 > Search reports for multiple projects in this any workspace.
@@ -152,6 +167,20 @@ const request = ReportBulkSearchRequest.builder()
     .size(15)
     .build();
 const response = connector.search(request, ReportResponse.of);
+```
+If you want to obtain metadata (the report creation date and update date), set the metadata flag in the `ReportBulkSearchRequest` to true and receive the data in the `ReportWithMetadataResponse`.  
+(Available from RapidTable version 1.6.25)
+```js
+import { ReportBulkSearchRequest, ReportWithMetadataResponse } from 'rtc4js';
+
+const request = ReportBulkSearchRequest.builder()
+    .workspaceId("EXAMPLE WORKSPACE_ID")
+    .projectIds("EXAMPLE PROJECT_ID1", "EXAMPLE PROJECT_ID2")
+    .page(0)
+    .size(15)
+    .metadata(true)
+    .build();
+const response = connector.search(request, ReportWithMetadataResponse.of);
 ```
 
 ### Projects - Count reports
@@ -192,6 +221,21 @@ const report = await connector.get(request, ReportResponse.of);
 console.log('report', report);
 ```
 
+If you want to obtain metadata (the report creation date and update date), set the metadata flag in the `ReportGetRequest` to true and receive the data in the `ReportWithMetadataResponse`.  
+(Available from RapidTable version 1.6.25)
+```js
+import { ReportGetRequest, ReportWithMetadataResponse } from 'rtc4js';
+
+const request = ReportGetRequest.builder()
+    .workspaceId('RTC4J_TEST_WORKSPACE_ID')
+    .projectId('RTC4J_TEST_PROJECT_ID')
+    .reportId('RTC4J_TEST_REPORT_ID')
+    .metadata(true)
+    .build();
+const report = await connector.get(request, ReportWithMetadataResponse.of);
+console.log('report', report);
+```
+
 ### Projects - Get reports (Bulk operation)
 > Get report for a specific project in this any workspace.
 ```js
@@ -205,6 +249,21 @@ const request = ReportBulkGetRequest.builder()
 const reports = await connector.bulkGet(request, ReportResponse.of);
 console.log('reports', reports);
 ```
+If you want to obtain metadata (the report creation date and update date), set the metadata flag in the `ReportBulkGetRequest` to true and receive the data in the `ReportWithMetadataResponse`.  
+(Available from RapidTable version 1.6.25)
+```js
+import { ReportBulkGetRequest, ReportWithMetadataResponse } from 'rtc4js';
+
+const request = ReportBulkGetRequest.builder()
+    .workspaceId('RTC4J_TEST_WORKSPACE_ID')
+    .projectId('RTC4J_TEST_PROJECT_ID')
+    .ids("EXAMPLE REPORT_ID1", "EXAMPLE REPORT_ID2", "EXAMPLE REPORT_ID3")
+    .metadata(true)
+    .build();
+const reports = await connector.bulkGet(request, ReportWithMetadataResponse.of);
+console.log('reports', reports);
+```
+
 
 ### Projects - Get report object
 > Get report object for a specific object data in this any workspace.

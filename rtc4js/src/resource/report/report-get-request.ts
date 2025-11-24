@@ -15,51 +15,72 @@ import { PathConfig } from '../path-config';
 import { IRequest } from '../request.interface';
 
 export class ReportGetRequest implements IRequest {
+  constructor(
+    public path: string,
+    public query: { [key: string]: string | number }
+  ) {}
 
-    constructor(public path: string, public query: { [key: string]: string | number }) { }
+  public getPath(): string {
+    return this.path;
+  }
 
-    public getPath(): string {
-        return this.path;
-    }
+  public getQuery(): { [key: string]: string | number } {
+    return this.query;
+  }
 
-    public getQuery(): { [key: string]: string | number } {
-        return this.query;
-    }
+  public getBody(): string | null {
+    return null;
+  }
 
-    public getBody(): string | null {
-        return null;
-    }
-
-    public static builder(): Builder {
-        return new Builder();
-    }
+  public static builder(): Builder {
+    return new Builder();
+  }
 }
 
 class Builder {
-    private _workspaceId: string | null = null;
-    private _projectId: string | null = null;
-    private _reportId: string | null = null;
+  private _workspaceId: string | null = null;
+  private _projectId: string | null = null;
+  private _reportId: string | null = null;
+  private _metadata: boolean = false;
 
-    public build(): ReportGetRequest {
-        const path = PathConfig.ROOT + PathConfig.WORKSPACE + `/${this._workspaceId}` +
-            PathConfig.PROJECTS + `/${this._projectId}` +
-            PathConfig.REPORTS + `/${this._reportId}`;
+  public build(): ReportGetRequest {
+    const path =
+      PathConfig.ROOT +
+      PathConfig.WORKSPACE +
+      `/${this._workspaceId}` +
+      PathConfig.PROJECTS +
+      `/${this._projectId}` +
+      PathConfig.REPORTS +
+      `/${this._reportId}`;
 
-        return new ReportGetRequest(path, {});
+    const params: { [key: string]: string | number } = {};
+    if (this._metadata) {
+      params['metadata'] = 'true';
     }
+    return new ReportGetRequest(path, params);
+  }
 
-    public workspaceId(workspaceId: string): Builder {
-        this._workspaceId = workspaceId;
-        return this;
-    }
+  public workspaceId(workspaceId: string): Builder {
+    this._workspaceId = workspaceId;
+    return this;
+  }
 
-    public projectId(projectId: string): Builder {
-        this._projectId = projectId;
-        return this;
-    }
+  public projectId(projectId: string): Builder {
+    this._projectId = projectId;
+    return this;
+  }
 
-    public reportId(reportId: string): Builder {
-        this._reportId = reportId;
-        return this;
-    }
+  public reportId(reportId: string): Builder {
+    this._reportId = reportId;
+    return this;
+  }
+
+  /**
+   * If "true", you can get report metadata (created date/updated date).
+   * Available from RapidTable version 1.6.25
+   */
+  public metadata(enabled: boolean): Builder {
+    this._metadata = enabled;
+    return this;
+  }
 }

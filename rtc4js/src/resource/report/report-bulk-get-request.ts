@@ -15,58 +15,81 @@ import { PathConfig } from '../path-config';
 import { IRequest } from '../request.interface';
 
 export class ReportBulkGetRequest implements IRequest {
+  constructor(
+    public path: string,
+    public query: { [key: string]: string | number }
+  ) {}
 
-    constructor(public path: string, public query: { [key: string]: string | number }) { }
+  public getPath(): string {
+    return this.path;
+  }
 
-    public getPath(): string {
-        return this.path;
-    }
+  public getQuery(): { [key: string]: string | number } {
+    return this.query;
+  }
 
-    public getQuery(): { [key: string]: string | number } {
-        return this.query;
-    }
+  public getBody(): string | null {
+    return null;
+  }
 
-    public getBody(): string | null {
-        return null;
-    }
-
-    public static builder(): Builder {
-        return new Builder();
-    }
+  public static builder(): Builder {
+    return new Builder();
+  }
 }
 
 class Builder {
-    private _workspaceId: string | null = null;
-    private _projectId: string | null = null;
-    private _ids: string[] = [];
+  private _workspaceId: string | null = null;
+  private _projectId: string | null = null;
+  private _ids: string[] = [];
+  private _metadata: boolean = false;
 
-    public build(): ReportBulkGetRequest {
-        const path = PathConfig.ROOT + PathConfig.WORKSPACE + `/${this._workspaceId}` +
-            PathConfig.PROJECTS + `/${this._projectId}` + PathConfig.REPORTS;
+  public build(): ReportBulkGetRequest {
+    const path =
+      PathConfig.ROOT +
+      PathConfig.WORKSPACE +
+      `/${this._workspaceId}` +
+      PathConfig.PROJECTS +
+      `/${this._projectId}` +
+      PathConfig.REPORTS;
 
-        if (!this._ids.length) {
-            throw new Error('IllegalArgumentException');
-        }
-        if (this._ids.length > 100) {
-            throw new Error('IllegalArgumentException');
-        }
-
-        const params = { ids: this._ids.join(',') };
-        return new ReportBulkGetRequest(path, params);
+    if (!this._ids.length) {
+      throw new Error('IllegalArgumentException');
+    }
+    if (this._ids.length > 100) {
+      throw new Error('IllegalArgumentException');
     }
 
-    public workspaceId(workspaceId: string): Builder {
-        this._workspaceId = workspaceId;
-        return this;
+    const params: { [key: string]: string | number } = {
+      ids: this._ids.join(','),
+    };
+    if (this._metadata) {
+      params['metadata'] = 'true';
     }
 
-    public projectId(projectId: string): Builder {
-        this._projectId = projectId;
-        return this;
-    }
+    return new ReportBulkGetRequest(path, params);
+  }
 
-    public ids(...reportIds: string[]): Builder {
-        this._ids.push(...reportIds);
-        return this;
-    }
+  public workspaceId(workspaceId: string): Builder {
+    this._workspaceId = workspaceId;
+    return this;
+  }
+
+  public projectId(projectId: string): Builder {
+    this._projectId = projectId;
+    return this;
+  }
+
+  public ids(...reportIds: string[]): Builder {
+    this._ids.push(...reportIds);
+    return this;
+  }
+
+  /**
+   * If "true", you can get report metadata (created date/updated date).
+   * Available from RapidTable version 1.6.25
+   */
+  public metadata(enabled: boolean): Builder {
+    this._metadata = enabled;
+    return this;
+  }
 }
