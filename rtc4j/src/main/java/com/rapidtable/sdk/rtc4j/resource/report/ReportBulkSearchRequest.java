@@ -48,6 +48,7 @@ public class ReportBulkSearchRequest implements IRequest {
 
     public static class Builder extends ReportSearchBuilderBase<ReportBulkSearchRequest> {
         private List<String> projectIds = new ArrayList<>();
+        private Boolean metadata = false;
 
         @Override
         public ReportBulkSearchRequest build() throws TooManyRequestException {
@@ -63,6 +64,9 @@ public class ReportBulkSearchRequest implements IRequest {
 
             final var params = getParams();
             params.add("projectIds=" + String.join(",", projectIds));
+            if (metadata) {
+                params.add("metadata=true");
+            }
 
             final var query = String.join("&", params);
             return new ReportBulkSearchRequest(path, query);
@@ -241,6 +245,15 @@ public class ReportBulkSearchRequest implements IRequest {
          */
         public Builder ids(final String... ids) {
             super.ids(ids);
+            return this;
+        }
+
+        /**
+         * If "true", you can get report metadata (created date/updated date).
+         * Available from RapidTable version 1.6.25
+         */
+        public Builder metadata(final Boolean enabled) {
+            this.metadata = enabled;
             return this;
         }
     }

@@ -20,7 +20,6 @@ import com.rapidtable.sdk.rtc4j.resource.PathConfig;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class ReportBulkGetRequest implements IRequest {
     private final String path;
@@ -51,6 +50,7 @@ public class ReportBulkGetRequest implements IRequest {
         private String workspaceId = null;
         private String projectId = null;
         private List<String> ids = new ArrayList<>();
+        private Boolean metadata = false;
 
         public ReportBulkGetRequest build() throws TooManyRequestException {
             final var path = PathConfig.ROOT + PathConfig.WORKSPACE + String.format("/%s", workspaceId) +
@@ -62,8 +62,13 @@ public class ReportBulkGetRequest implements IRequest {
             if (ids.size() > 300) {
                 throw new TooManyRequestException();
             }
+            final var params = new ArrayList<String>();
+            params.add(String.format("ids=%s", String.join(",", ids)));
+            if (metadata) {
+                params.add("metadata=true");
+            }
+            final var query = String.join("&", params);
 
-            final var query = String.format("ids=%s", String.join(",", ids));
             return new ReportBulkGetRequest(path, query);
         }
 
@@ -79,6 +84,15 @@ public class ReportBulkGetRequest implements IRequest {
 
         public Builder ids(final String... ids) {
             this.ids.addAll(Arrays.asList(ids));
+            return this;
+        }
+
+        /**
+         * If "true", you can get report metadata (created date/updated date).
+         * Available from RapidTable version 1.6.25
+         */
+        public Builder metadata(final Boolean enabled) {
+            this.metadata = enabled;
             return this;
         }
 

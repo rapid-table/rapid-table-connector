@@ -16,6 +16,8 @@ package com.rapidtable.sdk.rtc4j.resource.report;
 import com.rapidtable.sdk.rtc4j.resource.IRequest;
 import com.rapidtable.sdk.rtc4j.resource.PathConfig;
 
+import java.util.ArrayList;
+
 public class ReportGetRequest implements IRequest {
     private final String path;
     private final String query;
@@ -45,13 +47,20 @@ public class ReportGetRequest implements IRequest {
         private String workspaceId = null;
         private String projectId = null;
         private String reportId = null;
+        private Boolean metadata = false;
 
         public ReportGetRequest build() {
             final var path = PathConfig.ROOT + PathConfig.WORKSPACE + String.format("/%s", workspaceId) +
                 PathConfig.PROJECTS + String.format("/%s", projectId) +
                 PathConfig.REPORTS + String.format("/%s", reportId);
 
-            return new ReportGetRequest(path, null);
+            final var params = new ArrayList<String>();
+            if (metadata) {
+                params.add("metadata=true");
+            }
+            final var query = String.join("&", params);
+
+            return new ReportGetRequest(path, query);
         }
 
         public Builder workspaceId(final String workspaceId) {
@@ -66,6 +75,15 @@ public class ReportGetRequest implements IRequest {
 
         public Builder reportId(final String reportId) {
             this.reportId = reportId;
+            return this;
+        }
+
+        /**
+         * If "true", you can get report metadata (created date/updated date).
+         * Available from RapidTable version 1.6.25
+         */
+        public Builder metadata(final Boolean enabled) {
+            this.metadata = enabled;
             return this;
         }
 
