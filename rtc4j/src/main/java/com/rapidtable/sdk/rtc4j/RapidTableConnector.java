@@ -17,13 +17,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.rapidtable.sdk.rtc4j.resource.GetObjectResponse;
-import com.rapidtable.sdk.rtc4j.resource.IDeleteRequest;
-import com.rapidtable.sdk.rtc4j.resource.IGenerateIdRequest;
-import com.rapidtable.sdk.rtc4j.resource.IImportPackageRequest;
-import com.rapidtable.sdk.rtc4j.resource.IPutObjectRequest;
-import com.rapidtable.sdk.rtc4j.resource.IRequest;
-import com.rapidtable.sdk.rtc4j.resource.PathConfig;
+import com.rapidtable.sdk.rtc4j.resource.*;
 import com.rapidtable.sdk.rtc4j.resource.project.model.ImportFailedReport;
 
 import java.net.URI;
@@ -31,12 +25,10 @@ import java.net.URLDecoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.time.temporal.ChronoUnit.MINUTES;
 
 public class RapidTableConnector {
     private static final ObjectMapper mapper = new ObjectMapper()
@@ -53,15 +45,16 @@ public class RapidTableConnector {
     private final String AUTHORIZATION = "Authorization";
     private final String HTTP_CONTENT_TYPE_HEADER = "Content-Type";
     private final String HTTP_CONTENT_TYPE_JSON_VALUE = "application/json; charset=utf-8";
-    private Credentials credentials = Credentials.empty();
+    private Credentials credentials;
 
     public RapidTableConnector(final String accessId, final String accessKey,
-                               final String host, final Boolean secure) {
+                               final String host, final Boolean secure, final Credentials credentials) {
         this.accessId = accessId;
         this.accessKey = accessKey;
         this.host = host;
         this.client = HttpClient.newHttpClient();
         this.schema = secure ? "https" : "http";
+        this.credentials = Objects.nonNull(credentials) ? credentials : Credentials.empty();
     }
 
     public <T> List<T> search(final IRequest request, final Class<T> classType) throws Exception {
@@ -415,12 +408,14 @@ public class RapidTableConnector {
         private String accessKey;
         private String endpoint;
         private boolean secure;
+        private Credentials credentials;
 
         public RapidTableConnectorBuilder() {
             accessId = null;
             accessKey = null;
             endpoint = null;
             secure = true;
+            credentials = Credentials.empty();
         }
 
         public RapidTableConnectorBuilder accessId(final String accessId) {
@@ -443,36 +438,25 @@ public class RapidTableConnector {
             return this;
         }
 
+        public RapidTableConnectorBuilder credentials(final Credentials credentials) {
+            this.credentials = credentials;
+            return this;
+        }
+
         public RapidTableConnector build() {
-            if (Objects.isNull(accessId)) {
-                throw new IllegalArgumentException("accessId is required.");
-            }
-            if (Objects.isNull(accessKey)) {
-                throw new IllegalArgumentException("accessKey is required.");
+            if (Objects.isNull(credentials)) {
+                if (Objects.isNull(accessId)) {
+                    throw new IllegalArgumentException("accessId is required.");
+                }
+                if (Objects.isNull(accessKey)) {
+                    throw new IllegalArgumentException("accessKey is required.");
+                }
             }
             if (Objects.isNull(endpoint)) {
                 throw new IllegalArgumentException("endpoint is required.");
             }
-            return new RapidTableConnector(accessId, accessKey, endpoint, secure);
+            return new RapidTableConnector(accessId, accessKey, endpoint, secure, credentials);
         }
     }
     // #endregion
-
-    record Credentials(String token, LocalDateTime approvedAt) {
-        boolean isPermitted() {
-            if (Objects.isNull(token)) {
-                return false;
-            }
-            final var diff = MINUTES.between(LocalDateTime.now(), approvedAt);
-            return Math.abs(diff) <= 50;
-        }
-
-        static Credentials empty() {
-            return new Credentials(null, LocalDateTime.MIN);
-        }
-
-        static Credentials approve(String token) {
-            return new Credentials(token, LocalDateTime.now());
-        }
-    }
 }
