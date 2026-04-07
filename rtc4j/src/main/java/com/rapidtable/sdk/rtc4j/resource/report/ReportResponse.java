@@ -47,21 +47,16 @@ public class ReportResponse {
      * Returns each field as an associative array (key ... field id, value ... input value)
      */
     private Map<String, Object> fields;
-    /**
-     * Approval information
-     */
-    private ReportApproval approval;
 
     public ReportResponse() {
 
     }
 
-    public ReportResponse(String id, String formId, String projectId, Map<String, Object> fields, ReportApproval approval) {
+    public ReportResponse(String id, String formId, String projectId, Map<String, Object> fields) {
         this.id = id;
         this.formId = formId;
         this.projectId = projectId;
         this.fields = fields;
-        this.approval = approval;
     }
 
     public String getId() {
@@ -111,13 +106,5 @@ public class ReportResponse {
 
     public void setFields(final Map<String, Object> fields) {
         this.fields = fields;
-    }
-
-    public ReportApproval getApproval() {
-        return approval;
-    }
-
-    public void setApproval(ReportApproval approval) {
-        this.approval = approval;
     }
 }

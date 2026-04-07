@@ -11,6 +11,8 @@
  * and limitations under the License.
  */
 
+import { ReportApproval } from './report-approval';
+
 /**
  * Report Resource Response model
  */
@@ -20,8 +22,9 @@ export class ReportWithMetadataResponse {
     public formId: string = '',
     public projectId: string = '',
     public fields: { [key: string]: unknown } = {},
+    public approval: ReportApproval | null = null,
     public createdAt: Date | null,
-    public updatedAt: Date | null
+    public updatedAt: Date | null,
   ) {}
 
   public static of({
@@ -29,6 +32,7 @@ export class ReportWithMetadataResponse {
     formId,
     projectId,
     fields,
+    approval,
     createdAt,
     updatedAt,
   }: ReportWithMetadataResponse): ReportWithMetadataResponse {
@@ -50,8 +54,9 @@ export class ReportWithMetadataResponse {
       formId,
       projectId,
       fields,
+      approval,
       tryParseDate(createdAt),
-      tryParseDate(updatedAt)
+      tryParseDate(updatedAt),
     );
   }
 

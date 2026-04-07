@@ -11,8 +11,6 @@
  * and limitations under the License.
  */
 
-import { ReportApproval } from './report-approval';
-
 /**
  * Report Resource Response model
  */
@@ -22,7 +20,6 @@ export class ReportResponse {
     public formId: string = '',
     public projectId: string = '',
     public fields: { [key: string]: unknown } = {},
-    public approval: ReportApproval | null = null,
   ) {}
 
   public static of({
@@ -30,9 +27,8 @@ export class ReportResponse {
     formId,
     projectId,
     fields,
-    approval,
   }: ReportResponse): ReportResponse {
-    return new ReportResponse(id, formId, projectId, fields, approval);
+    return new ReportResponse(id, formId, projectId, fields);
   }
 
   public getFieldAs<T>(fieldId: string): T | null {

@@ -49,6 +49,10 @@ public class ReportWithMetadataResponse {
      */
     private Map<String, Object> fields;
     /**
+     * Approval information
+     */
+    private ReportApproval approval;
+    /**
      * Report creation date and time
      */
     private Instant createdAt;
@@ -62,11 +66,12 @@ public class ReportWithMetadataResponse {
     }
 
     public ReportWithMetadataResponse(String id, String formId, String projectId, Map<String, Object> fields,
-                                      Instant createdAt, Instant updatedAt) {
+                                      ReportApproval approval, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.formId = formId;
         this.projectId = projectId;
         this.fields = fields;
+        this.approval = approval;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -118,6 +123,14 @@ public class ReportWithMetadataResponse {
 
     public void setFields(final Map<String, Object> fields) {
         this.fields = fields;
+    }
+
+    public ReportApproval getApproval() {
+        return approval;
+    }
+
+    public void setApproval(ReportApproval approval) {
+        this.approval = approval;
     }
 
     public Instant getCreatedAt() {
