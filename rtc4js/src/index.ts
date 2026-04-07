@@ -36,6 +36,7 @@ export { ReportGetCanvasObjectRequest } from './resource/report/report-get-canva
 export { ReportGetRequest } from './resource/report/report-get-request';
 export { ReportPutObjectRequest } from './resource/report/report-put-object-request';
 export { ReportResponse } from './resource/report/report-response';
+export { ReportApproval, ReportApprovalStatus } from './resource/report/report-approval';
 export { ReportWithMetadataResponse } from './resource/report/report-with-metadata';
 export { ReportSearchRequest } from './resource/report/report-search-request';
 export { ReportUpdateRequest } from './resource/report/report-update-request';

@@ -11,58 +11,65 @@
  * and limitations under the License.
  */
 
+import { ReportApproval } from './report-approval';
+
 /**
  * Report Resource Response model
  */
 export class ReportResponse {
+  constructor(
+    public id: string = '',
+    public formId: string = '',
+    public projectId: string = '',
+    public fields: { [key: string]: unknown } = {},
+    public approval: ReportApproval | null = null,
+  ) {}
 
-    constructor(
-        public id: string = '',
-        public formId: string = '',
-        public projectId: string = '',
-        public fields: { [key: string]: unknown } = {},
-    ) {
+  public static of({
+    id,
+    formId,
+    projectId,
+    fields,
+    approval,
+  }: ReportResponse): ReportResponse {
+    return new ReportResponse(id, formId, projectId, fields, approval);
+  }
+
+  public getFieldAs<T>(fieldId: string): T | null {
+    if (this.fields === null || typeof this.fields !== 'object') {
+      return null;
     }
-
-    public static of({ id, formId, projectId, fields }: ReportResponse): ReportResponse {
-        return new ReportResponse(id, formId, projectId, fields);
+    const value = fieldId in this.fields ? this.fields[fieldId] : null;
+    if (value === null) {
+      return null;
     }
+    return value as T;
+  }
 
-    public getFieldAs<T>(fieldId: string): T | null {
-        if (this.fields === null || typeof this.fields !== 'object') {
-            return null;
-        }
-        const value = fieldId in this.fields ? this.fields[fieldId] : null;
-        if (value === null) {
-            return null;
-        }
-        return value as T;
-    }
+  public getFieldAsList(fieldId: string): string[] {
+    const data = this.getFieldAs<string[]>(fieldId) || [];
+    return Array.isArray(data) ? data : [];
+  }
 
-    public getFieldAsList(fieldId: string): string[] {
-        const data = this.getFieldAs<string[]>(fieldId) || [];
-        return Array.isArray(data) ? data : [];
-    }
+  public getFieldAsString(fieldId: string): string {
+    return this.getFieldAs<string>(fieldId) || '';
+  }
 
-    public getFieldAsString(fieldId: string): string {
-        return this.getFieldAs<string>(fieldId) || '';
-    }
-
-    public getFieldAsDate(fieldId: string): Date | null {
-        const value = this.getFieldAs<Date>(fieldId);
-        if (typeof value === 'string') {
-            try {
-                return new Date(value);
-            } catch {
-                return null;
-            }
-        } else if (value instanceof Date) {
-            return value;
-        }
+  public getFieldAsDate(fieldId: string): Date | null {
+    const value = this.getFieldAs<Date>(fieldId);
+    if (typeof value === 'string') {
+      try {
+        return new Date(value);
+      } catch {
         return null;
+      }
+    } else if (value instanceof Date) {
+      return value;
     }
+    return null;
+  }
 
-    public setField(fieldId: string, value: unknown): void {
-        this.fields[fieldId] = value;
-    }
+  public setField(fieldId: string, value: unknown): void {
+    this.fields[fieldId] = value;
+  }
 }
