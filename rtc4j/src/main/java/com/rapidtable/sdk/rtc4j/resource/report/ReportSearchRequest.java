@@ -238,7 +238,7 @@ public class ReportSearchRequest implements IRequest {
          * If "true", you can get report metadata (created date/updated date).
          * Available from RapidTable version 1.6.25
          */
-        public ReportSearchBuilderBase<ReportSearchRequest> metadata(final Boolean enabled) {
+        public Builder metadata(final Boolean enabled) {
             this.metadata = enabled;
             return this;
         }
