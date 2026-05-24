@@ -11,12 +11,15 @@
  * and limitations under the License.
  */
 
-import FormData from 'form-data';
+import { prepareFormData } from '../../utils/form-data-util';
 import { PathConfig } from '../path-config';
 import { IPutObjectRequest } from '../put-object-request.interface';
 
 export class DrivePutObjectRequest implements IPutObjectRequest {
-  constructor(public path: string, public formData: FormData) {}
+  constructor(
+    public path: string,
+    public formData: FormData,
+  ) {}
 
   public getPath(): string {
     return this.path;
@@ -56,14 +59,7 @@ class Builder {
   }
 
   public append(buffer: any, fileName: string): Builder {
-    if (!this._formData) {
-      this._formData = new FormData();
-    }
-    if (fileName.includes('/')) {
-      this._formData.append('file', buffer, { filepath: fileName });
-    } else {
-      this._formData.append('file', buffer, fileName);
-    }
+    this._formData = prepareFormData(this._formData, buffer, fileName);
     return this;
   }
 }

@@ -11,59 +11,62 @@
  * and limitations under the License.
  */
 
+import { prepareFormData } from '../../utils/form-data-util';
 import { PathConfig } from '../path-config';
 import { IPutObjectRequest } from '../put-object-request.interface';
-import FormData from 'form-data';
 
 export class ProjectPutCoverRequest implements IPutObjectRequest {
+  constructor(
+    public path: string,
+    public formData: FormData,
+  ) {}
 
-    constructor(public path: string, public formData: FormData) { }
+  public getPath(): string {
+    return this.path;
+  }
 
-    public getPath(): string {
-        return this.path;
-    }
+  public getFormData(): any {
+    return this.formData;
+  }
 
-    public getFormData(): any {
-        return this.formData;
-    }
-
-    public static builder(): Builder {
-        return new Builder();
-    }
+  public static builder(): Builder {
+    return new Builder();
+  }
 }
 
 class Builder {
-    private _workspaceId: string | null = null;
-    private _projectId: string | null = null;
-    private _formData: FormData | null = null;
+  private _workspaceId: string | null = null;
+  private _projectId: string | null = null;
+  private _formData: FormData | null = null;
 
-    public build(): ProjectPutCoverRequest {
-        const path = PathConfig.ROOT + PathConfig.WORKSPACE + `/${this._workspaceId}` +
-            PathConfig.PROJECTS + `/${this._projectId}` +
-            PathConfig.OBJECTS;
+  public build(): ProjectPutCoverRequest {
+    const path =
+      PathConfig.ROOT +
+      PathConfig.WORKSPACE +
+      `/${this._workspaceId}` +
+      PathConfig.PROJECTS +
+      `/${this._projectId}` +
+      PathConfig.OBJECTS;
 
-        if (!this._formData) {
-            throw new Error('IllegalArgumentException');
-        }
-
-        return new ProjectPutCoverRequest(path, this._formData);
+    if (!this._formData) {
+      throw new Error('IllegalArgumentException');
     }
 
-    public workspaceId(workspaceId: string): Builder {
-        this._workspaceId = workspaceId;
-        return this;
-    }
+    return new ProjectPutCoverRequest(path, this._formData);
+  }
 
-    public projectId(projectId: string): Builder {
-        this._projectId = projectId;
-        return this;
-    }
+  public workspaceId(workspaceId: string): Builder {
+    this._workspaceId = workspaceId;
+    return this;
+  }
 
-    public append(buffer: any, fileName: string): Builder {
-        if (!this._formData) {
-            this._formData = new FormData();
-        }
-        this._formData.append('file', buffer, fileName);
-        return this;
-    }
+  public projectId(projectId: string): Builder {
+    this._projectId = projectId;
+    return this;
+  }
+
+  public append(buffer: any, fileName: string): Builder {
+    this._formData = prepareFormData(this._formData, buffer, fileName);
+    return this;
+  }
 }

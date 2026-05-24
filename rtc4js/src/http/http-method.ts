@@ -11,9 +11,4 @@
  * and limitations under the License.
  */
 
-export interface IPutObjectRequest {
-
-    getPath(): string;
-
-    getFormData(): FormData;
-}
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';

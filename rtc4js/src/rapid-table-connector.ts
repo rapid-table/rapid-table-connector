@@ -11,7 +11,10 @@
  * and limitations under the License.
  */
 
-import axios, { AxiosHeaders, AxiosInstance } from 'axios';
+import { handleError, HttpError } from './http/http-error';
+import { HttpMethod } from './http/http-method';
+import { HttpResponseType, resolveAccept } from './http/http-request-type';
+import { HttpResponse, resolveHttpResponse } from './http/http-response';
 import { IDeleteRequest } from './resource/delete-request.interface';
 import { IGenerateIdRequest } from './resource/generate-id-request.interface';
 import { GetObjectResponse } from './resource/get-object-response';
@@ -22,349 +25,323 @@ import { ImportFailedReport } from './resource/report/import-failed-report';
 import { IRequest } from './resource/request.interface';
 
 const AUTHORIZATION_HEADER = 'authorization';
-const HTTP_CONTENT_TYPE_HEADER = 'Content-Type';
-const HTTP_CONTENT_TYPE_JSON_VALUE = 'application/json; charset=utf-8';
 
 export class RapidTableConnector {
   private accessId: string;
   private accessKey: string;
-  private client: AxiosInstance;
   private credentials: Credentials;
+  private baseURL: string;
 
   constructor(
     accessId: string,
     accessKey: string,
     host: string,
     secure: boolean,
-    credentials?: Credentials
+    credentials?: Credentials,
   ) {
     this.accessId = accessId;
     this.accessKey = accessKey;
     const schema = secure ? 'https' : 'http';
-    this.client = axios.create({
-      baseURL: `${schema}://${host}`,
-      headers: { 'Content-Type': HTTP_CONTENT_TYPE_JSON_VALUE },
-      withCredentials: true,
-    });
+    this.baseURL = `${schema}://${host}`;
     this.credentials = credentials || Credentials.empty();
   }
 
   public async search<T>(
     request: IRequest,
-    instanceFn?: (arg: T) => T
+    instanceFn?: (arg: T) => T,
   ): Promise<T[]> {
-    if (!this.credentials.isPermitted()) {
-      this.credentials = await this.permission();
-    }
+    const postscript = ({ data }: HttpResponse<T[]>): T[] =>
+      instanceFn ? data.map((item) => instanceFn(item)) : data;
 
-    if (!request.getPath()) {
-      return Promise.reject(`IllegalArgumentException`);
-    }
-
-    const headers = new AxiosHeaders();
-    headers.set(AUTHORIZATION_HEADER, this.credentials.token);
-
-    const params = request.getQuery();
-
-    const res = await this.client.get<T[]>(request.getPath(), {
-      headers,
-      params,
-    });
-    if (res.status !== 200) {
-      return Promise.reject(`search failed: ${res.status}`);
-    }
-    if (instanceFn instanceof Function) {
-      return res.data.map((item) => instanceFn(item));
-    }
-    return res.data;
+    return await this.getRequest('search', postscript, request);
   }
 
   public async count(request: IRequest): Promise<number> {
-    if (!this.credentials.isPermitted()) {
-      this.credentials = await this.permission();
-    }
+    const postscript = ({ data }: HttpResponse<number>) => data;
 
-    if (!request.getPath()) {
-      return Promise.reject(`IllegalArgumentException`);
-    }
-
-    const headers = new AxiosHeaders();
-    headers.set(AUTHORIZATION_HEADER, this.credentials.token);
-
-    const params = request.getQuery();
-
-    const res = await this.client.get<number>(request.getPath(), {
-      headers,
-      params,
-    });
-    if (res.status !== 200) {
-      return Promise.reject(`count failed: ${res.status}`);
-    }
-    return res.data;
+    return await this.getRequest('count', postscript, request);
   }
 
   public async get<T>(
     request: IRequest,
-    instanceFn?: (arg: T) => T
+    instanceFn?: (arg: T) => T,
   ): Promise<T> {
-    if (!this.credentials.isPermitted()) {
-      this.credentials = await this.permission();
-    }
+    const postscript = ({ data }: HttpResponse<T>) =>
+      instanceFn ? instanceFn(data) : data;
 
-    if (!request.getPath()) {
-      return Promise.reject(`IllegalArgumentException`);
-    }
-
-    const headers = new AxiosHeaders();
-    headers.set(AUTHORIZATION_HEADER, this.credentials.token);
-
-    const params = request.getQuery();
-
-    const res = await this.client.get<T>(request.getPath(), {
-      headers,
-      params,
-    });
-    if (res.status !== 200) {
-      return Promise.reject(`get failed: ${res.status}`);
-    }
-    if (instanceFn instanceof Function) {
-      return instanceFn(res.data);
-    }
-    return res.data as T;
+    return await this.getRequest('get', postscript, request);
   }
 
   public async bulkGet<T>(
     request: IRequest,
-    instanceFn?: (arg: T) => T
+    instanceFn?: (arg: T) => T,
   ): Promise<T[]> {
-    if (!this.credentials.isPermitted()) {
-      this.credentials = await this.permission();
-    }
+    const postscript = ({ data }: HttpResponse<T[]>) =>
+      instanceFn ? data.map((item) => instanceFn(item)) : data;
 
-    if (!request.getPath()) {
-      return Promise.reject(`IllegalArgumentException`);
-    }
-
-    const headers = new AxiosHeaders();
-    headers.set(AUTHORIZATION_HEADER, this.credentials.token);
-
-    const params = request.getQuery();
-
-    const res = await this.client.get<T[]>(request.getPath(), {
-      headers,
-      params,
-    });
-    if (res.status !== 200) {
-      return Promise.reject(`get failed: ${res.status}`);
-    }
-    if (instanceFn instanceof Function) {
-      return res.data.map((item) => instanceFn(item));
-    }
-    return res.data;
+    return await this.getRequest('bulkGet', postscript, request);
   }
 
   public async getObject(request: IRequest): Promise<GetObjectResponse> {
-    if (!this.credentials.isPermitted()) {
-      this.credentials = await this.permission();
-    }
+    const postscript = (res: HttpResponse<ArrayBuffer>): GetObjectResponse => {
+      const fileName = decodeURIComponent(res.headers.get('etag') || '');
+      const contentType = '' + res.headers.get('content-type') || '';
+      const contentLength = +(res.headers.get('content-length') || NaN);
+      const data = Buffer.from(res.data);
+      return new GetObjectResponse(fileName, contentType, contentLength, data);
+    };
 
-    if (!request.getPath()) {
-      return Promise.reject(`IllegalArgumentException`);
-    }
-
-    const headers = new AxiosHeaders();
-    headers.set(AUTHORIZATION_HEADER, this.credentials.token);
-
-    const params = request.getQuery();
-
-    const res = await this.client.get(request.getPath(), {
-      headers,
-      responseType: 'arraybuffer',
-      params,
-    });
-    if (res.status !== 200) {
-      return Promise.reject(`get failed: ${res.status}`);
-    }
-    const fileName = decodeURIComponent(res.headers['etag']);
-    const contentType = '' + res.headers['content-type'] || '';
-    const contentLength = +(res.headers['content-length'] || NaN);
-    const data = Buffer.from(res.data);
-    return new GetObjectResponse(fileName, contentType, contentLength, data);
+    return await this.getRequest(
+      'getObject',
+      postscript,
+      request,
+      'arraybuffer',
+    );
   }
 
   public async generateId(request: IGenerateIdRequest): Promise<string> {
-    if (!this.credentials.isPermitted()) {
-      this.credentials = await this.permission();
-    }
+    const postscript = ({ data }: HttpResponse<string>) => data;
 
-    if (!request.getPath()) {
-      return Promise.reject(`IllegalArgumentException`);
-    }
-
-    const headers = new AxiosHeaders();
-    headers.set(AUTHORIZATION_HEADER, this.credentials.token);
-
-    const res = await this.client.get<string>(request.getPath(), { headers });
-    if (res.status !== 200) {
-      return Promise.reject(`get failed: ${res.status}`);
-    }
-    return res.data;
+    return await this.getRequest('generateId', postscript, request, 'text');
   }
 
   public async create<T>(
     request: IRequest,
-    instanceFn?: (arg: T) => T
+    instanceFn?: (arg: T) => T,
   ): Promise<T> {
-    if (!this.credentials.isPermitted()) {
-      this.credentials = await this.permission();
-    }
+    const postscript = ({ data }: HttpResponse<T>) =>
+      instanceFn ? instanceFn(data) : data;
 
-    if (!request.getPath()) {
-      return Promise.reject(`IllegalArgumentException`);
-    }
-
-    const headers = new AxiosHeaders();
-    headers.set(AUTHORIZATION_HEADER, this.credentials.token);
-
-    const params = request.getQuery();
-
-    const res = await this.client.post<T>(
-      request.getPath(),
-      request.getBody(),
-      { headers, params }
-    );
-    if (res.status !== 200) {
-      return Promise.reject(`get failed: ${res.status}`);
-    }
-    if (instanceFn instanceof Function) {
-      return instanceFn(res.data);
-    }
-    return res.data as T;
+    return await this.postRequest('create', postscript, request);
   }
 
   public async update<T>(
     request: IRequest,
-    instanceFn?: (arg: T) => T
+    instanceFn?: (arg: T) => T,
   ): Promise<T> {
-    if (!this.credentials.isPermitted()) {
-      this.credentials = await this.permission();
-    }
+    const postscript = ({ data }: HttpResponse<T>) =>
+      instanceFn ? instanceFn(data) : data;
 
-    if (!request.getPath()) {
-      return Promise.reject(`IllegalArgumentException`);
-    }
-
-    const headers = new AxiosHeaders();
-    headers.set(AUTHORIZATION_HEADER, this.credentials.token);
-
-    const params = request.getQuery();
-
-    const res = await this.client.put<T>(request.getPath(), request.getBody(), {
-      headers,
-      params,
-    });
-    if (res.status !== 200) {
-      return Promise.reject(`get failed: ${res.status}`);
-    }
-    if (instanceFn instanceof Function) {
-      return instanceFn(res.data);
-    }
-    return res.data as T;
+    return await this.putRequest('update', postscript, request);
   }
 
   public async delete(request: IDeleteRequest): Promise<void> {
-    if (!this.credentials.isPermitted()) {
-      this.credentials = await this.permission();
-    }
-
-    if (!request.getPath()) {
-      return Promise.reject(`IllegalArgumentException`);
-    }
-
-    const headers = new AxiosHeaders();
-    headers.set(AUTHORIZATION_HEADER, this.credentials.token);
-
-    const params = request.getQuery();
-
-    const res = await this.client.delete(request.getPath(), {
-      headers,
-      params,
-    });
-    if (res.status !== 200) {
-      return Promise.reject(`get failed: ${res.status}`);
-    }
+    return await this.deleteRequest('delete', request);
   }
 
   public async putObject(request: IPutObjectRequest): Promise<string> {
-    if (!this.credentials.isPermitted()) {
-      this.credentials = await this.permission();
-    }
+    const postscript = ({ data }: HttpResponse<string>) => data;
 
-    if (!request.getPath() || !request.getFormData()) {
-      return Promise.reject(`IllegalArgumentException`);
-    }
-
-    const headers = new AxiosHeaders();
-    headers.set(AUTHORIZATION_HEADER, this.credentials.token);
-    headers.set(HTTP_CONTENT_TYPE_HEADER, 'multipart/form-data');
-    const res = await this.client.put(
-      request.getPath(),
-      request.getFormData(),
-      { headers }
-    );
-    if (res.status !== 200) {
-      return Promise.reject(`get failed: ${res.status}`);
-    }
-    return res.data;
+    return await this.putRequest('putObject', postscript, request, 'text');
   }
 
   public async importPackage(
-    request: IImportPackageRequest
+    request: IImportPackageRequest,
   ): Promise<ImportFailedReport[]> {
-    if (!this.credentials.isPermitted()) {
-      this.credentials = await this.permission();
-    }
+    const postscript = ({ data }: HttpResponse<ImportFailedReport[]>) => data;
 
-    if (!request.getPath() || !request.getFormData()) {
-      return Promise.reject(`IllegalArgumentException`);
-    }
-    const params = request.getQuery();
-
-    const headers = new AxiosHeaders();
-    headers.set(AUTHORIZATION_HEADER, this.credentials.token);
-    headers.set(HTTP_CONTENT_TYPE_HEADER, 'multipart/form-data');
-    const res = await this.client.post(
-      request.getPath(),
-      request.getFormData(),
-      { headers, params }
-    );
-    if (res.status !== 200) {
-      return Promise.reject(`get failed: ${res.status}`);
-    }
-    return res.data;
+    return await this.postRequest('importPackage', postscript, request);
   }
 
   public async permission(): Promise<Credentials> {
     if (!this.accessId || !this.accessKey) {
-      return Promise.reject(`Permission failed: No access key or ID.`);
+      throw new Error(`Permission failed: No access key or ID.`);
     }
-    const request = {
-      email: this.accessId,
-      key: this.accessKey,
-    };
+    try {
+      const request: IRequest = {
+        getPath: () => PathConfig.ROOT + PathConfig.PERMISSIONS,
+        getQuery: () => ({}),
+        getBody: () =>
+          JSON.stringify({
+            email: this.accessId,
+            key: this.accessKey,
+          }),
+      };
 
-    const response = await this.client.post(
-      PathConfig.ROOT + PathConfig.PERMISSIONS,
-      request
-    );
-
-    if (response.status !== 200) {
-      return Promise.reject(`Permission failed: ${response.status}`);
+      const response = await this.exchange('POST', request);
+      const token = response.headers.get(AUTHORIZATION_HEADER) || '';
+      return Credentials.approve(token);
+    } catch (error) {
+      throw handleError('Permission', error);
     }
-
-    const token = response.headers[AUTHORIZATION_HEADER] || '';
-    return Credentials.approve(token);
   }
+
+  //#region Internal Http Client Method
+  private async getRequest<T, R>(
+    invokerName: string,
+    postscript: (args: HttpResponse<T>) => R,
+    request:
+      | IRequest
+      | IDeleteRequest
+      | IGenerateIdRequest
+      | IImportPackageRequest
+      | IPutObjectRequest,
+    responseType: HttpResponseType = 'json',
+  ): Promise<R> {
+    try {
+      await this.ensurePermission();
+      const res = await this.exchange<T>('GET', request, responseType);
+      return postscript(res);
+    } catch (error) {
+      throw handleError(invokerName, error);
+    }
+  }
+
+  private async postRequest<T, R>(
+    invokerName: string,
+    postscript: (args: HttpResponse<T>) => R,
+    request:
+      | IRequest
+      | IDeleteRequest
+      | IGenerateIdRequest
+      | IImportPackageRequest
+      | IPutObjectRequest,
+    responseType: HttpResponseType = 'json',
+  ): Promise<R> {
+    try {
+      await this.ensurePermission();
+      const res = await this.exchange<T>('POST', request, responseType);
+      return postscript(res);
+    } catch (error) {
+      throw handleError(invokerName, error);
+    }
+  }
+
+  private async putRequest<T, R>(
+    invokerName: string,
+    postscript: (args: HttpResponse<T>) => R,
+    request:
+      | IRequest
+      | IDeleteRequest
+      | IGenerateIdRequest
+      | IImportPackageRequest
+      | IPutObjectRequest,
+    responseType: HttpResponseType = 'json',
+  ): Promise<R> {
+    try {
+      await this.ensurePermission();
+      const res = await this.exchange<T>('PUT', request, responseType);
+      return postscript(res);
+    } catch (error) {
+      throw handleError(invokerName, error);
+    }
+  }
+
+  private async deleteRequest(
+    invokerName: string,
+    request:
+      | IRequest
+      | IDeleteRequest
+      | IGenerateIdRequest
+      | IImportPackageRequest
+      | IPutObjectRequest,
+  ): Promise<void> {
+    try {
+      await this.ensurePermission();
+      await this.exchange('DELETE', request);
+    } catch (error) {
+      throw handleError(invokerName, error);
+    }
+  }
+
+  private async exchange<T>(
+    method: HttpMethod,
+    request:
+      | IRequest
+      | IDeleteRequest
+      | IGenerateIdRequest
+      | IImportPackageRequest
+      | IPutObjectRequest,
+    responseType: HttpResponseType = 'json',
+    timeoutMs: number = 0,
+  ): Promise<HttpResponse<T>> {
+    if (!request.getPath()) {
+      throw new Error(`IllegalArgumentException`);
+    }
+
+    const url = new URL(request.getPath(), this.baseURL);
+
+    // -------- Query param --------
+    const query = 'getQuery' in request ? request.getQuery() : undefined;
+    if (query) {
+      Object.entries(query).forEach(([k, v]) => {
+        if (v != null) url.searchParams.append(k, String(v));
+      });
+    }
+
+    // -------- Body --------
+    const body: BodyInit | undefined = (() => {
+      if ('getFormData' in request && !!request.getFormData()) {
+        return request.getFormData() as unknown as BodyInit;
+      } else if ('getBody' in request && !!request.getBody()) {
+        const rawBody = request.getBody() as unknown;
+        if (
+          typeof rawBody === 'string' ||
+          rawBody instanceof Blob ||
+          rawBody instanceof URLSearchParams ||
+          rawBody instanceof ArrayBuffer
+        ) {
+          return rawBody;
+        } else if (rawBody != null) {
+          return JSON.stringify(rawBody);
+        }
+      }
+      return undefined;
+    })();
+
+    // -------- Headers --------
+    const headers = new Headers();
+    headers.set('Accept', resolveAccept(responseType));
+    headers.set('X-Requested-With', 'XMLHttpRequest');
+    if (typeof window === 'undefined') {
+      headers.set('User-Agent', 'RapidTableClient/1.0');
+    }
+    if (this.credentials.token) {
+      headers.set(AUTHORIZATION_HEADER, this.credentials.token);
+    }
+    if ('getBody' in request && !!request.getBody()) {
+      headers.set('Content-Type', 'application/json; charset=utf-8');
+    }
+
+    // -------- Timeout --------
+    let controller: AbortController | undefined;
+    let timeoutId: any;
+    if (timeoutMs && timeoutMs > 0) {
+      controller = new AbortController();
+      timeoutId = setTimeout(() => controller!.abort(), timeoutMs);
+    }
+
+    try {
+      const response = await fetch(url.toString(), {
+        method,
+        headers,
+        body,
+        signal: controller?.signal,
+        credentials: 'include',
+      });
+
+      return await resolveHttpResponse(response, responseType);
+    } catch (err: any) {
+      if (err.name === 'AbortError') {
+        throw new Error(`Timeout (${timeoutMs}ms)`);
+      }
+      if (err instanceof HttpError) {
+        throw err;
+      }
+      throw new Error(`Network error: ${err.message}`);
+    } finally {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    }
+  }
+
+  private async ensurePermission() {
+    if (!this.credentials.isPermitted()) {
+      this.credentials = await this.permission();
+    }
+  }
+  //#endregion
 
   public static builder(): RapidTableConnectorBuilder {
     return new RapidTableConnectorBuilder();
@@ -420,20 +397,23 @@ class RapidTableConnectorBuilder {
       this._accessKey || '',
       this._endpoint,
       this._secure,
-      this._credentials
+      this._credentials,
     );
   }
 }
 
 export class Credentials {
-  constructor(public token: string | null, public approvedAt: number) {}
+  constructor(
+    public token: string | null,
+    public approvedAt: number,
+  ) {}
 
   isPermitted(): boolean {
     if (!this.token) {
       return false;
     }
-    const diff = (this.approvedAt - Date.now()) / (1000 * 60);
-    return Math.abs(diff) <= 50;
+    const diff = (Date.now() - this.approvedAt) / (1000 * 60);
+    return diff <= 50;
   }
 
   static empty(): Credentials {

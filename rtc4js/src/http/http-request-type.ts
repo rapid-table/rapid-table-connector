@@ -11,9 +11,19 @@
  * and limitations under the License.
  */
 
-export interface IPutObjectRequest {
+export type HttpResponseType = 'json' | 'text' | 'arraybuffer' | 'blob';
 
-    getPath(): string;
-
-    getFormData(): FormData;
+export function resolveAccept(type?: HttpResponseType): string {
+  switch (type) {
+    case 'json':
+      return 'application/json';
+    case 'text':
+      return 'text/plain';
+    case 'arraybuffer':
+      return 'application/octet-stream';
+    case 'blob':
+      return '*/*';
+    default:
+      return '*/*';
+  }
 }

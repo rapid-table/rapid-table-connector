@@ -11,7 +11,7 @@
  * and limitations under the License.
  */
 
-import FormData from 'form-data';
+import { prepareFormData } from '../../utils/form-data-util';
 import { IImportPackageRequest } from '../import-package-request.interface';
 import { PathConfig } from '../path-config';
 
@@ -19,7 +19,7 @@ export class ProjectImportPackageRequest implements IImportPackageRequest {
   constructor(
     public path: string,
     public query: { [key: string]: string | number },
-    public formData: FormData
+    public formData: FormData,
   ) {}
 
   public getPath(): string {
@@ -82,10 +82,7 @@ class Builder {
   }
 
   public append(buffer: any): Builder {
-    if (!this._formData) {
-      this._formData = new FormData();
-    }
-    this._formData.append('file', buffer, 'package.zip');
+    this._formData = prepareFormData(this._formData, buffer, 'package.zip');
     return this;
   }
 }

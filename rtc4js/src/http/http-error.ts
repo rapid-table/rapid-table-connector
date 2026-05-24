@@ -11,9 +11,22 @@
  * and limitations under the License.
  */
 
-export interface IPutObjectRequest {
+export class HttpError extends Error {
+  constructor(
+    message: string,
+    public status: number,
+    public body?: any
+  ) {
+    super(message);
+  }
+}
 
-    getPath(): string;
-
-    getFormData(): FormData;
+export function handleError(invoker: string, error: unknown): Error {
+  if (error instanceof HttpError) {
+    return new Error(
+      `${invoker} failed: ${error.status} (${error.body || error.message})`,
+    );
+  } else {
+    return new Error(`${invoker} failed`);
+  }
 }
