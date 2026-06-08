@@ -33,18 +33,21 @@ public class SchemaField {
     private SchemaFieldType type;
     private Boolean required;
     private Object settings;
+    private Map<String, SchemaFieldMetadata> metadata;
 
     public SchemaField() {
 
     }
 
-    public SchemaField(String id, String name, String remarks, SchemaFieldType type, Boolean required, Object settings) {
+    public SchemaField(String id, String name, String remarks, SchemaFieldType type, Boolean required, Object settings,
+                       Map<String, SchemaFieldMetadata> metadata) {
         this.id = id;
         this.name = name;
         this.remarks = remarks;
         this.type = type;
         this.required = required;
         this.settings = settings;
+        this.metadata = metadata;
     }
 
     public String getId() {
@@ -69,5 +72,9 @@ public class SchemaField {
 
     public Map<String, Object> getSettings() {
         return mapper.convertValue(settings, Map.class);
+    }
+
+    public Map<String, SchemaFieldMetadata> getMetadata() {
+        return metadata;
     }
 }
