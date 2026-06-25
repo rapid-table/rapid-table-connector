@@ -51,6 +51,7 @@ class Builder {
   private _emp: string | null = null;
   private _noemp: string | null = null;
   private _includes: string[] = [];
+  private _orIncludes: string[] = [];
   private _in: string[] = [];
   private _eq: string | null = null;
   private _neq: string | null = null;
@@ -105,6 +106,9 @@ class Builder {
     }
     if (Array.isArray(this._includes) && this._includes.length > 0) {
       params['includes'] = this._includes.join(';');
+    }
+    if (Array.isArray(this._orIncludes) && this._orIncludes.length > 0) {
+      params['orIncludes'] = this._orIncludes.join(';');
     }
     if (Array.isArray(this._in) && this._in.length > 0) {
       params['in'] = this._in.join(';');
@@ -228,6 +232,18 @@ class Builder {
   }
 
   /**
+   * Exact match for specific field.
+   * (OR condition for each field)
+   * orIncludes=fieldId1:searchText1;fieldId2:searchText2
+   * - For example, the arguments are as follows
+   * "fieldId1:searchText1", "fieldId2:searchText2",...
+   */
+  public orIncludes(...orIncludes: string[]): Builder {
+    this._orIncludes.push(...orIncludes);
+    return this;
+  }
+
+  /**
    * Partial match for specific field.
    * in=fieldId1:searchText1;fieldId2:searchText2
    * - For example, the arguments are as follows
@@ -249,7 +265,7 @@ class Builder {
 
   /**
    * Numeric value (not equal).
-   * eq=fieldId:123
+   * neq=fieldId:123
    */
   public neq(fieldId: string, value: string): Builder {
     this._neq = `${fieldId}:${value}`;
@@ -258,7 +274,7 @@ class Builder {
 
   /**
    * Numeric value (less than).
-   * eq=fieldId:123
+   * lt=fieldId:123
    */
   public lt(fieldId: string, value: string): Builder {
     this._lt = `${fieldId}:${value}`;
@@ -267,7 +283,7 @@ class Builder {
 
   /**
    * Numeric value (less than or equal to).
-   * eq=fieldId:123
+   * lte=fieldId:123
    */
   public lte(fieldId: string, value: string): Builder {
     this._lte = `${fieldId}:${value}`;
@@ -276,7 +292,7 @@ class Builder {
 
   /**
    * Numeric value (greater than).
-   * eq=fieldId:123
+   * gt=fieldId:123
    */
   public gt(fieldId: string, value: string): Builder {
     this._gt = `${fieldId}:${value}`;
@@ -285,7 +301,7 @@ class Builder {
 
   /**
    * Numeric value (grater than or equal to).
-   * eq=fieldId:123
+   * gte=fieldId:123
    */
   public gte(fieldId: string, value: string): Builder {
     this._gte = `${fieldId}:${value}`;

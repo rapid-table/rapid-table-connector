@@ -31,6 +31,7 @@ public abstract class ReportSearchBuilderBase<T> {
     protected String emp = null;
     protected String noemp = null;
     protected List<String> includes = null;
+    protected List<String> orIncludes = null;
     protected List<String> in = null;
     protected String eq = null;
     protected String neq = null;
@@ -135,6 +136,18 @@ public abstract class ReportSearchBuilderBase<T> {
     }
 
     /**
+     * Exact match for specific field.
+     * (OR condition for each field)
+     * orIncludes=fieldId1:searchText1;fieldId2:searchText2
+     * - For example, the arguments are as follows
+     * "fieldId1:searchText1", "fieldId2:searchText2",...
+     */
+    public ReportSearchBuilderBase<T> orIncludes(final String... orIncludes) {
+        this.orIncludes = Arrays.stream(orIncludes).toList();
+        return this;
+    }
+
+    /**
      * Partial match for specific field.
      * in=fieldId1:searchText1;fieldId2:searchText2
      * - For example, the arguments are as follows
@@ -156,7 +169,7 @@ public abstract class ReportSearchBuilderBase<T> {
 
     /**
      * Numeric value (not equal).
-     * eq=fieldId:123
+     * neq=fieldId:123
      */
     public ReportSearchBuilderBase<T> neq(final String fieldId, final String value) {
         this.neq = String.format("%s:%s", fieldId, value);
@@ -165,7 +178,7 @@ public abstract class ReportSearchBuilderBase<T> {
 
     /**
      * Numeric value (less than).
-     * eq=fieldId:123
+     * lt=fieldId:123
      */
     public ReportSearchBuilderBase<T> lt(final String fieldId, final String value) {
         this.lt = String.format("%s:%s", fieldId, value);
@@ -174,7 +187,7 @@ public abstract class ReportSearchBuilderBase<T> {
 
     /**
      * Numeric value (less than or equal to).
-     * eq=fieldId:123
+     * lte=fieldId:123
      */
     public ReportSearchBuilderBase<T> lte(final String fieldId, final String value) {
         this.lte = String.format("%s:%s", fieldId, value);
@@ -183,7 +196,7 @@ public abstract class ReportSearchBuilderBase<T> {
 
     /**
      * Numeric value (greater than).
-     * eq=fieldId:123
+     * gt=fieldId:123
      */
     public ReportSearchBuilderBase<T> gt(final String fieldId, final String value) {
         this.gt = String.format("%s:%s", fieldId, value);
@@ -192,7 +205,7 @@ public abstract class ReportSearchBuilderBase<T> {
 
     /**
      * Numeric value (grater than or equal to).
-     * eq=fieldId:123
+     * gte=fieldId:123
      */
     public ReportSearchBuilderBase<T> gte(final String fieldId, final String value) {
         this.gte = String.format("%s:%s", fieldId, value);
@@ -261,6 +274,9 @@ public abstract class ReportSearchBuilderBase<T> {
         }
         if (Objects.nonNull(includes) && !includes.isEmpty()) {
             params.add("includes=" + String.join(";", includes));
+        }
+        if (Objects.nonNull(orIncludes) && !orIncludes.isEmpty()) {
+            params.add("orIncludes=" + String.join(";", orIncludes));
         }
         if (Objects.nonNull(in) && !in.isEmpty()) {
             params.add("in=" + String.join(";", in));

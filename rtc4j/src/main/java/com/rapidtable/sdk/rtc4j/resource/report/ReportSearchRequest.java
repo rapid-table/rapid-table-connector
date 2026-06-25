@@ -134,6 +134,18 @@ public class ReportSearchRequest implements IRequest {
         }
 
         /**
+         * Exact match for specific field.
+         * (OR condition for each field)
+         * orIncludes=fieldId1:searchText1;fieldId2:searchText2
+         * - For example, the arguments are as follows
+         * "fieldId1:searchText1", "fieldId2:searchText2",...
+         */
+        public Builder orIncludes(final String... orIncludes) {
+            this.orIncludes = Arrays.stream(orIncludes).toList();
+            return this;
+        }
+
+        /**
          * Partial match for specific field.
          * in=fieldId1:searchText1;fieldId2:searchText2
          * - For example, the arguments are as follows
@@ -155,7 +167,7 @@ public class ReportSearchRequest implements IRequest {
 
         /**
          * Numeric value (not equal).
-         * eq=fieldId:123
+         * neq=fieldId:123
          */
         public Builder neq(final String fieldId, final String value) {
             this.neq = String.format("%s:%s", fieldId, value);
@@ -164,7 +176,7 @@ public class ReportSearchRequest implements IRequest {
 
         /**
          * Numeric value (less than).
-         * eq=fieldId:123
+         * lt=fieldId:123
          */
         public Builder lt(final String fieldId, final String value) {
             this.lt = String.format("%s:%s", fieldId, value);
@@ -173,7 +185,7 @@ public class ReportSearchRequest implements IRequest {
 
         /**
          * Numeric value (less than or equal to).
-         * eq=fieldId:123
+         * lte=fieldId:123
          */
         public Builder lte(final String fieldId, final String value) {
             this.lte = String.format("%s:%s", fieldId, value);
@@ -182,7 +194,7 @@ public class ReportSearchRequest implements IRequest {
 
         /**
          * Numeric value (greater than).
-         * eq=fieldId:123
+         * gt=fieldId:123
          */
         public Builder gt(final String fieldId, final String value) {
             this.gt = String.format("%s:%s", fieldId, value);
@@ -191,7 +203,7 @@ public class ReportSearchRequest implements IRequest {
 
         /**
          * Numeric value (grater than or equal to).
-         * eq=fieldId:123
+         * gte=fieldId:123
          */
         public Builder gte(final String fieldId, final String value) {
             this.gte = String.format("%s:%s", fieldId, value);
